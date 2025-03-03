@@ -1,0 +1,30 @@
+{
+  "schemaVersion": 1,
+  "id": "danismod",
+  "version": "${version}",
+  "name": "danismod",
+  "description": "",
+  "authors": [],
+  "contact": {},
+  "license": "All-Rights-Reserved",
+  "icon": "assets/danismod/icon.png",
+  "environment": "*",
+  "entrypoints": {
+    "client": [
+      "org.danismod.danismod.client.DanismodClient"
+    ],
+    "main": [
+      "org.danismod.danismod.Danismod"
+    ]
+  },
+  "mixins": [
+  ],
+  "datagen": {
+    "modid": "danismod"
+  },
+  "depends": {
+    "fabricloader": ">=${loader_version}",
+    "fabric": "*",
+    "minecraft": "${minecraft_version}"
+  }
+}

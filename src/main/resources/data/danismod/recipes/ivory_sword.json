@@ -1,0 +1,16 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    " I ",
+    "IRI",
+    " S "
+  ],
+  "key": {
+    "S": { "item": "minecraft:stick" },
+    "R": { "item": "minecraft:iron_ingot" },
+    "I": { "item": "danismod:ivory" }
+  },
+  "result": {
+    "item": "danismod:ivory_sword"
+  }
+}

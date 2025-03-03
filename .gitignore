@@ -1,0 +1,5 @@
+# not-for-use folders
+gradle/
+.gradle/
+build/
+run/
