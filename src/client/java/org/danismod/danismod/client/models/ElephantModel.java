@@ -7,6 +7,8 @@ import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.util.math.MathHelper;
 import org.danismod.danismod.client.mobsrenderer.renderstates.ElephantRenderState;
 
+import java.util.Random;
+
 public class ElephantModel extends EntityModel<ElephantRenderState> {
     private final ModelPart root;
     private final ModelPart torso;
@@ -93,22 +95,19 @@ public class ElephantModel extends EntityModel<ElephantRenderState> {
                 .uv(102, 44).cuboid(-0.6138F, -0.6779F, -9.7477F, 1.3138F, 1.3558F, 9.8953F, new Dilation(0.0F)), ModelTransform.pivot(0.8F, -6.5779F, -20.5524F));
         return TexturedModelData.of(modelData, 256, 256);
     }
+
     @Override
     public void setAngles(ElephantRenderState state) {
-        float headYaw = MathHelper.clamp(state.bodyYaw, -45F, 45F) * ((float) Math.PI / 180F);
-        float headPitch = MathHelper.clamp(state.pitch, -20F, 20F) * ((float) Math.PI / 180F);
+        float maxHeadYaw = 45F * ((float) Math.PI / 180F); // Max head rotation in radians
+        float headPitchTarget = MathHelper.clamp(state.pitch, -20F, 20F) * ((float) Math.PI / 180F);
 
-        float time = state.age * 0.05F;
-        float randomMotion = MathHelper.sin(time) * 0.1F;
+        // Smooth interpolation for natural movement
+        this.head.yaw = MathHelper.clamp(state.bodyYaw - maxHeadYaw, -maxHeadYaw, maxHeadYaw) * 0.2F;
+        this.head.pitch = (headPitchTarget - this.head.pitch) * 0.2F;
 
-        this.head.yaw = headYaw + MathHelper.clamp(randomMotion, -0.2F, 0.2F);
-        this.head.pitch = headPitch;
-
-        float limbSwing = state.limbFrequency; // Movement speed
-        float limbAmplitude = state.limbAmplitudeMultiplier; // Prevent extreme movement
-
-        float maxTailSwing = 0.5F; // Limit the tail's max movement
-        float gravityEffect = 0.1F;
+        // Keep existing limb animation
+        float limbSwing = state.limbFrequency;
+        float limbAmplitude = state.limbAmplitudeMultiplier;
 
         if (limbSwing < 0.01F) {
             this.frontright.pitch = 0.0F;
@@ -122,13 +121,16 @@ public class ElephantModel extends EntityModel<ElephantRenderState> {
             this.backleft.pitch = MathHelper.cos(limbSwing * 0.6662F + (float) Math.PI) * 1.4F * limbAmplitude;
         }
 
-        if (limbAmplitude > 0.01F) { // If moving, sway the tail
+        // Adjust tail movement naturally
+        float maxTailSwing = 0.5F;
+        float gravityEffect = 0.1F;
+
+        if (limbAmplitude > 0.01F) {
             this.tail.pitch = MathHelper.sin(limbSwing * 0.5F) * limbAmplitude * 0.4F - gravityEffect;
-        } else { // If idle, let gravity pull it down slightly
+        } else {
             this.tail.pitch = -gravityEffect;
         }
 
-        // Clamp to avoid clipping ( it sucks )
         this.tail.pitch = MathHelper.clamp(this.tail.pitch, -maxTailSwing, maxTailSwing);
     }
     public void render(MatrixStack matrices, VertexConsumer vertexConsumer, int light, int overlay, float red, float green, float blue, float alpha) {

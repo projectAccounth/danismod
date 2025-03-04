@@ -1,13 +1,10 @@
 package org.danismod.danismod.items;
 
 import net.fabricmc.fabric.api.itemgroup.v1.ItemGroupEvents;
-import net.minecraft.item.ItemGroups;
-import net.minecraft.item.SwordItem;
-import net.minecraft.item.ToolMaterial;
+import net.minecraft.item.*;
 import net.minecraft.registry.tag.BlockTags;
 import net.minecraft.registry.tag.ItemTags;
 import org.danismod.danismod.Danismod;
-import net.minecraft.item.Item;
 import net.minecraft.registry.Registry;
 import net.minecraft.registry.Registries;
 import net.minecraft.registry.RegistryKeys;
@@ -28,12 +25,12 @@ public class ModItems {
     }
 
     public static final ToolMaterial IVORY_TOOL_MATERIAL = new ToolMaterial(
-            BlockTags.INCORRECT_FOR_WOODEN_TOOL,
-            607,
-            8.0F,
+            BlockTags.INCORRECT_FOR_IRON_TOOL,
+            100,
+            2.0F,
             0F,
             22,
-            ItemTags.REPAIRS_IRON_ARMOR
+            ItemTags.ARMOR_ENCHANTABLE
     );
 
     public static final Item ELEPHANT_TUSK = register("elephant_tusk", Item::new, new Item.Settings());
@@ -41,27 +38,27 @@ public class ModItems {
 
     public static final Item IVORY_SWORD = register(
             "ivory_sword",
-            settings -> new SwordItem(IVORY_TOOL_MATERIAL, 6f, 1f, settings),
+            settings -> new SwordItem(IVORY_TOOL_MATERIAL, 5f, 1f, settings),
             new Item.Settings()
     );
     public static final Item IVORY_HOE = register(
             "ivory_hoe",
-            settings -> new SwordItem(IVORY_TOOL_MATERIAL, 3f, .6f, settings),
+            settings -> new HoeItem(IVORY_TOOL_MATERIAL, 3f, .6f, settings),
             new Item.Settings()
     );
     public static final Item IVORY_PICKAXE = register(
             "ivory_pickaxe",
-            settings -> new SwordItem(IVORY_TOOL_MATERIAL, 4f, .8f, settings),
+            settings -> new PickaxeItem(IVORY_TOOL_MATERIAL, 4f, .8f, settings),
             new Item.Settings()
     );
     public static final Item IVORY_AXE = register(
             "ivory_axe",
-            settings -> new SwordItem(IVORY_TOOL_MATERIAL, 8f, .8f, settings),
+            settings -> new AxeItem(IVORY_TOOL_MATERIAL, 8f, .8f, settings),
             new Item.Settings()
     );
     public static final Item IVORY_SHOVEL = register(
             "ivory_shovel",
-            settings -> new SwordItem(IVORY_TOOL_MATERIAL, 3f, .7f, settings),
+            settings -> new ShovelItem(IVORY_TOOL_MATERIAL, 3f, .7f, settings),
             new Item.Settings()
     );
 

@@ -1,0 +1,18 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "equipment",
+  "key": {
+    "S": "minecraft:stick",
+    "R": "minecraft:iron_ingot",
+    "I": "danismod:ivory"
+  },
+  "pattern": [
+    "IR",
+    "IS",
+    " S"
+  ],
+  "result": {
+    "count": 1,
+    "id": "danismod:ivory_axe"
+  }
+}
