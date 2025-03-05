@@ -1,3 +1,9 @@
 {
-  "item.danismod.elephant_tusk" : "Elephant Tusk"
+  "item.danismod.elephant_tusk" : "Elephant Tusk",
+  "item.danismod.ivory": "Ivory",
+  "item.danismod.ivory_pickaxe": "Ivory Pickaxe",
+  "item.danismod.ivory_axe": "Ivory Axe",
+  "item.danismod.ivory_sword": "Ivory Sword",
+  "item.danismod.ivory_hoe": "Ivory Hoe",
+  "item.danismod.ivory_shovel": "Ivory Shovel"
 }

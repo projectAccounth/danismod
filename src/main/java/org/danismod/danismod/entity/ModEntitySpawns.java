@@ -17,7 +17,7 @@ public class ModEntitySpawns {
                 ModEntitySpawns::isSavannaBiome,
                 SpawnGroup.CREATURE,
                 ModEntities.ELEPHANT,
-                15, 2, 5
+                10, 2, 5
         );
     }
 }

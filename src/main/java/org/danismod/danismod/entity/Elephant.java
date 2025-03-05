@@ -26,21 +26,22 @@ public class Elephant extends AnimalEntity {
     @Override
     protected void initGoals() {
         this.goalSelector.add(0, new SwimGoal(this)); // Swim when in water
-        this.goalSelector.add(2, new EscapeDangerGoal(this, 1.25)); // Run away from danger
+        this.goalSelector.add(1, new EscapeDangerGoal(this, 1.4)); // Run away from danger
+        this.goalSelector.add(1, new AnimalMateGoal(this, 1.25)); // Breeding behavior
         this.goalSelector.add(2, new WanderAroundFarGoal(this, 1.0)); // Roam around
         this.goalSelector.add(2, new LookAroundGoal(this)); // Look around idly
-        this.goalSelector.add(4, new LookAtEntityGoal(this, PlayerEntity.class, 6.0f)); // Look at nearby players6.0F));
-        this.goalSelector.add(2, new MeleeAttackGoal(this, 1.2D, false));
-        this.goalSelector.add(1, new RevengeGoal(this));
-        this.targetSelector.add(1, new ActiveTargetGoal<>(this, PlayerEntity.class, true));
-        this.goalSelector.add(1, new AnimalMateGoal(this, 1.3));
+        this.goalSelector.add(3, new LookAtEntityGoal(this, PlayerEntity.class, 6.0f)); // Look at players
+
+        // Attack only when provoked
+        this.goalSelector.add(3, new MeleeAttackGoal(this, 1.2D, false));
+        this.goalSelector.add(3, new RevengeGoal(this)); // Attacks back when attacked
     }
 
     public static DefaultAttributeContainer.Builder createMobAttributes() {
         return LivingEntity.createLivingAttributes()
                 .add(EntityAttributes.MAX_HEALTH, 80.0)  // High health
-                .add(EntityAttributes.MOVEMENT_SPEED, 0.5) // Normal walking speed
-                .add(EntityAttributes.ATTACK_DAMAGE, 20.0)
+                .add(EntityAttributes.MOVEMENT_SPEED, 0.2) // Normal walking speed
+                .add(EntityAttributes.ATTACK_DAMAGE, 26.0)
                 .add(EntityAttributes.FOLLOW_RANGE, 20.0)
                 .add(EntityAttributes.KNOCKBACK_RESISTANCE, 2)
                 .add(EntityAttributes.ATTACK_KNOCKBACK, 3);

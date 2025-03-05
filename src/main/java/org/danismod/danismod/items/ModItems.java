@@ -43,22 +43,22 @@ public class ModItems {
     );
     public static final Item IVORY_HOE = register(
             "ivory_hoe",
-            settings -> new HoeItem(IVORY_TOOL_MATERIAL, 3f, .6f, settings),
+            settings -> new HoeItem(IVORY_TOOL_MATERIAL, 3f, 1.2f, settings),
             new Item.Settings()
     );
     public static final Item IVORY_PICKAXE = register(
             "ivory_pickaxe",
-            settings -> new PickaxeItem(IVORY_TOOL_MATERIAL, 4f, .8f, settings),
+            settings -> new PickaxeItem(IVORY_TOOL_MATERIAL, 4f, 1.2f, settings),
             new Item.Settings()
     );
     public static final Item IVORY_AXE = register(
             "ivory_axe",
-            settings -> new AxeItem(IVORY_TOOL_MATERIAL, 8f, .8f, settings),
+            settings -> new AxeItem(IVORY_TOOL_MATERIAL, 8f, 1.4f, settings),
             new Item.Settings()
     );
     public static final Item IVORY_SHOVEL = register(
             "ivory_shovel",
-            settings -> new ShovelItem(IVORY_TOOL_MATERIAL, 3f, .7f, settings),
+            settings -> new ShovelItem(IVORY_TOOL_MATERIAL, 3f, 1.2f, settings),
             new Item.Settings()
     );
 
