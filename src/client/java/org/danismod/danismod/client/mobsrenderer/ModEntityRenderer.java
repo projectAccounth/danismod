@@ -10,5 +10,6 @@ import net.fabricmc.fabric.api.client.rendering.v1.EntityRendererRegistry;
 public class ModEntityRenderer {
     public static void registerRenderers() {
         EntityRendererRegistry.register(ModEntities.ELEPHANT, ElephantRenderer::new);
+        EntityRendererRegistry.register(ModEntities.LION, LionRenderer::new);
     }
 }

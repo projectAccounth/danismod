@@ -11,16 +11,7 @@ import java.util.Random;
 
 public class ElephantModel extends EntityModel<ElephantRenderState> {
     private final ModelPart root;
-    private final ModelPart torso;
     private final ModelPart head;
-    private final ModelPart ears;
-    private final ModelPart earRight;
-    private final ModelPart earLeft;
-    private final ModelPart trunk;
-    private final ModelPart tusks;
-    private final ModelPart tuskLeft;
-    private final ModelPart tuskRight;
-    private final ModelPart legs;
     private final ModelPart frontleft;
     private final ModelPart backright;
     private final ModelPart frontright;
@@ -29,20 +20,20 @@ public class ElephantModel extends EntityModel<ElephantRenderState> {
     public ElephantModel(ModelPart root) {
         super(root);
         this.root = root.getChild("root");
-        this.torso = this.root.getChild("torso");
+        ModelPart torso = this.root.getChild("torso");
         this.head = this.root.getChild("head");
-        this.ears = this.head.getChild("ears");
-        this.earRight = this.ears.getChild("earRight");
-        this.earLeft = this.ears.getChild("earLeft");
-        this.trunk = this.head.getChild("trunk");
-        this.tusks = this.head.getChild("tusks");
-        this.tuskLeft = this.tusks.getChild("tuskLeft");
-        this.tuskRight = this.tusks.getChild("tuskRight");
-        this.legs = this.root.getChild("legs");
-        this.frontleft = this.legs.getChild("frontleft");
-        this.backright = this.legs.getChild("backright");
-        this.frontright = this.legs.getChild("frontright");
-        this.backleft = this.legs.getChild("backleft");
+        ModelPart ears = this.head.getChild("ears");
+        ModelPart earRight = ears.getChild("earRight");
+        ModelPart earLeft = ears.getChild("earLeft");
+        ModelPart trunk = this.head.getChild("trunk");
+        ModelPart tusks = this.head.getChild("tusks");
+        ModelPart tuskLeft = tusks.getChild("tuskLeft");
+        ModelPart tuskRight = tusks.getChild("tuskRight");
+        ModelPart legs = this.root.getChild("legs");
+        this.frontleft = legs.getChild("frontleft");
+        this.backright = legs.getChild("backright");
+        this.frontright = legs.getChild("frontright");
+        this.backleft = legs.getChild("backleft");
         this.tail = this.root.getChild("tail");
     }
     public static TexturedModelData getTexturedModelData() {

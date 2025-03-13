@@ -5,8 +5,8 @@ import net.fabricmc.api.Environment;
 import net.minecraft.client.render.VertexConsumerProvider;
 import net.minecraft.client.render.entity.MobEntityRenderer;
 import net.minecraft.client.util.math.MatrixStack;
-import org.danismod.danismod.client.DanismodClient;
 import org.danismod.danismod.client.mobsrenderer.renderstates.ElephantRenderState;
+import org.danismod.danismod.client.models.ModModelLayers;
 import org.danismod.danismod.entity.Elephant;
 import org.danismod.danismod.client.models.ElephantModel;
 
@@ -18,16 +18,12 @@ public class ElephantRenderer extends MobEntityRenderer<Elephant, ElephantRender
     private static final Identifier TEXTURE = Identifier.of("danismod", "textures/entities/elephant.png");
 
     public ElephantRenderer(EntityRendererFactory.Context context) {
-        super(context, new ElephantModel(context.getPart(DanismodClient.ELEPHANT_MODEL_LAYER)), 0.75f);
+        super(context, new ElephantModel(context.getPart(ModModelLayers.ELEPHANT_MODEL_LAYER)), 0.75f);
     }
 
     @Override
     public Identifier getTexture(ElephantRenderState state) {
         return TEXTURE;
-    }
-
-    public ElephantRenderState getRenderState() {
-        return new ElephantRenderState();
     }
 
     @Override

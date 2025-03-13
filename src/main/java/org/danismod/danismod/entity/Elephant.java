@@ -26,14 +26,14 @@ public class Elephant extends AnimalEntity {
     @Override
     protected void initGoals() {
         this.goalSelector.add(0, new SwimGoal(this)); // Swim when in water
-        this.goalSelector.add(1, new EscapeDangerGoal(this, 1.4)); // Run away from danger
+        // this.goalSelector.add(1, new EscapeDangerGoal(this, 1.4)); // Run away from danger
         this.goalSelector.add(1, new AnimalMateGoal(this, 1.25)); // Breeding behavior
         this.goalSelector.add(2, new WanderAroundFarGoal(this, 1.0)); // Roam around
         this.goalSelector.add(2, new LookAroundGoal(this)); // Look around idly
         this.goalSelector.add(3, new LookAtEntityGoal(this, PlayerEntity.class, 6.0f)); // Look at players
 
         // Attack only when provoked
-        this.goalSelector.add(3, new MeleeAttackGoal(this, 1.2D, false));
+        this.goalSelector.add(3, new MeleeAttackGoal(this, 1.25, false));
         this.goalSelector.add(3, new RevengeGoal(this)); // Attacks back when attacked
     }
 
