@@ -18,6 +18,7 @@ import net.minecraft.world.World;
 import net.minecraft.entity.player.PlayerEntity;
 import org.danismod.danismod.entity.mob_routines.FollowPrideLeaderGoal;
 import org.danismod.danismod.entity.mob_routines.LionRoutineGoal;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
@@ -168,33 +169,26 @@ public class Lion extends AnimalEntity {
         }
     }
 
-    @Override
-    public void wakeUp() {
+    public void doWakeUp() {
         super.wakeUp();
-        if (this.getPose() == EntityPose.SLEEPING) {
-            stopResting();
-            this.goalSelector.enableControl(Goal.Control.MOVE);
-            this.goalSelector.enableControl(Goal.Control.LOOK);
-            this.goalSelector.enableControl(Goal.Control.TARGET);
-        }
+        stopResting();
+        this.goalSelector.enableControl(Goal.Control.MOVE);
+        this.goalSelector.enableControl(Goal.Control.LOOK);
+        this.goalSelector.enableControl(Goal.Control.TARGET);
     }
 
-    @Override
-    public void sleep(BlockPos pos) {
-        if (this.getWorld().isNight()) {
-            layDown();
-            this.setTarget(null); // Stop targeting prey
-            this.getNavigation().stop(); // Stop movement
-            this.goalSelector.disableControl(Goal.Control.MOVE);
-            this.goalSelector.disableControl(Goal.Control.LOOK);
-            this.goalSelector.disableControl(Goal.Control.TARGET);
-        } else {
-            wakeUp();
-        }
+    public void goToSleep(BlockPos pos) {
+        layDown();
+        this.setTarget(null); // Stop targeting prey
+        this.goalSelector.disableControl(Goal.Control.MOVE);
+        this.goalSelector.disableControl(Goal.Control.LOOK);
+        this.goalSelector.disableControl(Goal.Control.TARGET);
     }
 
     public void standUp() {
         this.goalSelector.enableControl(Goal.Control.MOVE);
+        this.goalSelector.enableControl(Goal.Control.LOOK);
+        this.goalSelector.enableControl(Goal.Control.TARGET);
         this.setPose(EntityPose.STANDING);
         this.setMovementSpeed(1.0F);
     }
@@ -203,6 +197,7 @@ public class Lion extends AnimalEntity {
         this.goalSelector.disableControl(Goal.Control.MOVE);
         this.setPose(EntityPose.CROUCHING);
         this.setMovementSpeed(0.0F);
+        this.getNavigation().stop();
     }
 
     @Override
@@ -274,7 +269,11 @@ public class Lion extends AnimalEntity {
     }
 
     public void rest() {
-        layDown();
+        var sleepSpot = this.findSleepingSpot();
+        this.getNavigation().startMovingTo(sleepSpot.getX(), sleepSpot.getY(), sleepSpot.getZ(), 1.0);
+        if (this.getNavigation().isIdle()) {
+            this.goToSleep(sleepSpot); // Sleep only after reaching the spot
+        }
         restTime = 100;
         isResting = true;
     }
@@ -291,5 +290,45 @@ public class Lion extends AnimalEntity {
 
     public boolean isMale() {
         return isMale;
+    }
+
+    private BlockPos sleepingSpot = null;
+
+    public BlockPos getSleepingSpot() {
+        return sleepingSpot;
+    }
+
+    public void setSleepingSpot(BlockPos pos) {
+        this.sleepingSpot = pos;
+    }
+
+    private boolean isShaded(@NotNull BlockPos pos, @NotNull World world) {
+        return !world.isSkyVisible(pos);
+    }
+
+    public BlockPos findSleepingSpot() {
+        if (this.sleepingSpot != null &&
+            this.sleepingSpot.isWithinDistance(this.getBlockPos(), 10) &&
+            !isShaded(this.sleepingSpot, this.getWorld())
+        ) {
+            return this.sleepingSpot; // Return the remembered spot
+        }
+
+        BlockPos currentPos = this.getBlockPos();
+        World world = this.getWorld();
+
+        for (int x = -15; x <= 15; x++) {
+            for (int z = -15; z <= 15; z++) {
+                BlockPos checkPos = currentPos.add(x, 0, z);
+                if (isShaded(checkPos, world)) {
+                    this.setSleepingSpot(checkPos); // Store the spot for later use
+                    return checkPos;
+                }
+            }
+        }
+
+        // No good spot found, sleep at the current position
+        this.setSleepingSpot(currentPos);
+        return currentPos;
     }
 }

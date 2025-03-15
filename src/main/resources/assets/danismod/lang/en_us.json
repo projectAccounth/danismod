@@ -5,5 +5,8 @@
   "item.danismod.ivory_axe": "Ivory Axe",
   "item.danismod.ivory_sword": "Ivory Sword",
   "item.danismod.ivory_hoe": "Ivory Hoe",
-  "item.danismod.ivory_shovel": "Ivory Shovel"
+  "item.danismod.ivory_shovel": "Ivory Shovel",
+
+  "entity.danismod.lion": "Lion",
+  "entity.danismod.elephant": "Elephant"
 }

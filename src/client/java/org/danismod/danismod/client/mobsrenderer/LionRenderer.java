@@ -13,10 +13,12 @@ import org.danismod.danismod.client.mobsrenderer.renderstates.LionRenderState;
 import org.danismod.danismod.client.models.LionModel;
 import org.danismod.danismod.client.models.ModModelLayers;
 import org.danismod.danismod.entity.Lion;
+import org.jetbrains.annotations.NotNull;
 
 @Environment(EnvType.CLIENT)
 public class LionRenderer extends MobEntityRenderer<Lion, LionRenderState, EntityModel<LionRenderState>> {
-    private static final Identifier TEXTURE = Identifier.of("danismod", "textures/entities/lion.png");
+    private static final Identifier TEXTURE = Identifier.of("danismod", "textures/entities/lion_norm.png");
+    private static final Identifier S_TEXTURE = Identifier.of("danismod", "textures/entities/lion_sleeping.png");
 
     private static LionModel STANDING_MODEL, STANDING_MODEL_F;
     private static LionModel RESTING_MODEL, RESTING_MODEL_F;
@@ -24,8 +26,6 @@ public class LionRenderer extends MobEntityRenderer<Lion, LionRenderState, Entit
     @Override
     public void updateRenderState(Lion lion, LionRenderState state, float tickDelta) {
         super.updateRenderState(lion, state, tickDelta);
-
-        state.isMale = lion.isMale();
     }
 
     public LionRenderer(EntityRendererFactory.Context context) {
@@ -38,7 +38,7 @@ public class LionRenderer extends MobEntityRenderer<Lion, LionRenderState, Entit
 
     @Override
     public Identifier getTexture(LionRenderState state) {
-        return TEXTURE;
+        return (!state.isInPose(EntityPose.CROUCHING) ? TEXTURE : S_TEXTURE);
     }
 
     @Override
@@ -47,11 +47,17 @@ public class LionRenderer extends MobEntityRenderer<Lion, LionRenderState, Entit
     }
 
     @Override
-    public void render(LionRenderState state, MatrixStack matrices, VertexConsumerProvider vertexConsumers, int light) {
+    public void render(@NotNull LionRenderState state, MatrixStack matrices, VertexConsumerProvider vertexConsumers, int light) {
         if (state.isInPose(EntityPose.CROUCHING) || state.isInPose(EntityPose.SLEEPING)) {
-            this.model = state.isMale ? RESTING_MODEL : RESTING_MODEL_F;
+            if (state.isMale)
+                this.model = RESTING_MODEL;
+            else
+                this.model = RESTING_MODEL_F;
         } else {
-            this.model = state.isMale ? STANDING_MODEL : STANDING_MODEL_F;
+            if (state.isMale)
+                this.model = STANDING_MODEL;
+            else
+                this.model = STANDING_MODEL_F;
         }
 
         float scale = state.baby ? 0.5F : 1.0F;

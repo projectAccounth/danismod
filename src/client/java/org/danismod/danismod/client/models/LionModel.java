@@ -17,7 +17,6 @@ public class LionModel extends EntityModel<LionRenderState> {
 	private final ModelPart leg4bone;
 	private final ModelPart headbone;
     private final ModelPart tailbone;
-	public final ModelPart manebone;
 
 	public boolean isCrouching;
 	public LionModel(ModelPart root) {
@@ -33,7 +32,11 @@ public class LionModel extends EntityModel<LionRenderState> {
         ModelPart ears = this.headbone.getChild("ears");
         ModelPart ear1bone = ears.getChild("ear1bone");
         ModelPart ear2bone = ears.getChild("ear2bone");
-        this.manebone = this.headbone.getChild("manebone");
+		try {
+			ModelPart manebone = this.headbone.getChild("manebone");
+		} catch (RuntimeException e) {
+			System.out.println(e);
+		}
 		this.tailbone = root1.getChild("tailbone");
 	}
 	@NotNull
@@ -191,6 +194,10 @@ public class LionModel extends EntityModel<LionRenderState> {
 
 	@Override
 	public void setAngles(LionRenderState state) {
+		if (state.isMale) this.getPart("manebone").ifPresent( part -> {
+			part.visible = true;
+		});
+
 		if (state.pose != EntityPose.STANDING) return;
 
 		float maxHeadYaw = 45F * ((float) Math.PI / 180F); // Max head rotation in radians
@@ -221,8 +228,8 @@ public class LionModel extends EntityModel<LionRenderState> {
 		}
 
 		// Adjust tail movement naturally
-		float maxTailSwing = 0.5F;
-		float gravityEffect = 0.1F;
+		float maxTailSwing = 0.8F;
+		float gravityEffect = 0.3F;
 
 		if (limbAmplitude > 0.01F) {
 			this.tailbone.pitch = MathHelper.sin(limbSwing * 0.5F) * limbAmplitude * 0.4F - gravityEffect;

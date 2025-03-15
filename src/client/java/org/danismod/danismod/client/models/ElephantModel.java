@@ -113,8 +113,8 @@ public class ElephantModel extends EntityModel<ElephantRenderState> {
         }
 
         // Adjust tail movement naturally
-        float maxTailSwing = 0.5F;
-        float gravityEffect = 0.1F;
+        float maxTailSwing = 0.8F;
+        float gravityEffect = 0.3F;
 
         if (limbAmplitude > 0.01F) {
             this.tail.pitch = MathHelper.sin(limbSwing * 0.5F) * limbAmplitude * 0.4F - gravityEffect;

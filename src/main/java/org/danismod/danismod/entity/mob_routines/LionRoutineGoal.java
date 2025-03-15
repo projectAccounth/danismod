@@ -33,22 +33,20 @@ public class LionRoutineGoal extends Goal {
         if (lionEntity.isResting()) return;
 
         List<MobEntity> prey = this.findNearbyPreys(); // Find prey before making a decision
-        if (lionEntity.getWorld().isDay()) {
-            lionEntity.wakeUp();
+        lionEntity.doWakeUp();
 
-            if (!prey.isEmpty() && !lionEntity.isBaby()) {
-                if (lionEntity.isBaby()) return;
-                hunt(prey); // Hunt if prey is found
-                System.out.println("Found prey! Hunting...");
-            } else if (lionEntity.getRandom().nextFloat() < 0.9F) {
-                roam(); // Roam if no prey is nearby
-                System.out.println("No prey nearby. Roaming...");
-            } else {
-                rest(); // Rest occasionally when no prey is around
-                System.out.println("No prey nearby. Resting...");
-            }
+        float roamChance = lionEntity.getWorld().isDay() ? 0.3F : 0.8F;
+
+        if (!prey.isEmpty() && !lionEntity.isBaby()) {
+            if (lionEntity.isBaby()) return;
+            hunt(prey); // Hunt if prey is found
+            System.out.println("Found prey! Hunting...");
+        } else if (lionEntity.getRandom().nextFloat() < roamChance) {
+            roam(); // Roam if no prey is nearby
+            System.out.println("No prey nearby. Roaming...");
         } else {
-            lionEntity.sleep(lionEntity.getBlockPos()); // Sleep at night
+            rest(); // Rest occasionally when no prey is around
+            System.out.println("No prey nearby. Resting...");
         }
     }
     private void roam() {
@@ -112,6 +110,7 @@ public class LionRoutineGoal extends Goal {
                 lionEntity.setTarget(target);
 
                 if (strongPrey) {
+                    // never going there
                     if (lionEntity.getLeader() == null) {
                         // lionEntity.setTarget(target);
                         // lionEntity.getNavigation().startMovingTo(target, 1.5);
@@ -119,6 +118,13 @@ public class LionRoutineGoal extends Goal {
                         return;
                     }
                     // Get pride members to join the hunt
+                    if (lionEntity.getLeader().prideMembers.size() < 2) {
+                        for (Lion member : lionEntity.getLeader().prideMembers) {
+                            member.setTarget(null);
+                            System.out.println("Ignoring target, too strong. Pride size: " + lionEntity.getLeader().prideMembers.size());
+                        }
+                        return;
+                    }
                     for (Lion member : lionEntity.getLeader().prideMembers) {
                         member.wakeUp();
                         member.setTarget(target);
@@ -139,7 +145,7 @@ public class LionRoutineGoal extends Goal {
         }
     }
 
-    private boolean isWeakPrey(LivingEntity entity) {
+    private boolean isWeakPrey(@NotNull LivingEntity entity) {
         return entity.getHealth() <= 12;
     }
 
@@ -148,7 +154,11 @@ public class LionRoutineGoal extends Goal {
     }
 
     private boolean isValidPrey(LivingEntity entity) {
-        if (entity instanceof Lion || entity instanceof FishEntity || entity.isTouchingWater())
+        if (entity instanceof Lion ||
+            entity instanceof FishEntity ||
+            entity instanceof SquidEntity ||
+            entity.isTouchingWater()
+        )
             return false;
         return (isWeakPrey(entity) || isStrongPrey(entity));
     }
