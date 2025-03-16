@@ -2,6 +2,7 @@ package org.danismod.danismod;
 
 import org.danismod.danismod.entity.ModEntities;
 import org.danismod.danismod.entity.ModEntitySpawns;
+import org.danismod.danismod.items.ModItemGroup;
 import org.danismod.danismod.items.ModItems;
 import net.fabricmc.api.ModInitializer;
 import org.danismod.danismod.sounds.ModSoundEvents;
@@ -12,6 +13,7 @@ public class Danismod implements ModInitializer {
     @Override
     public void onInitialize() {
         ModItems.initialize();
+        ModItemGroup.initialize();
         ModEntities.register();
         ModEntitySpawns.registerSpawns();
         ModSoundEvents.registerModSounds();

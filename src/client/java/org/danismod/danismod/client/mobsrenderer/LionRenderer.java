@@ -5,6 +5,7 @@ import net.fabricmc.api.Environment;
 import net.minecraft.client.render.VertexConsumerProvider;
 import net.minecraft.client.render.entity.EntityRendererFactory;
 import net.minecraft.client.render.entity.MobEntityRenderer;
+import net.minecraft.client.render.entity.VillagerEntityRenderer;
 import net.minecraft.client.render.entity.model.EntityModel;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.entity.EntityPose;
@@ -20,20 +21,19 @@ public class LionRenderer extends MobEntityRenderer<Lion, LionRenderState, Entit
     private static final Identifier TEXTURE = Identifier.of("danismod", "textures/entities/lion_norm.png");
     private static final Identifier S_TEXTURE = Identifier.of("danismod", "textures/entities/lion_sleeping.png");
 
-    private static LionModel STANDING_MODEL, STANDING_MODEL_F;
-    private static LionModel RESTING_MODEL, RESTING_MODEL_F;
+    private static LionModel STANDING_MODEL;
+    private static LionModel RESTING_MODEL;
 
     @Override
     public void updateRenderState(Lion lion, LionRenderState state, float tickDelta) {
         super.updateRenderState(lion, state, tickDelta);
+        state.setMaleFlag(lion.isMale());
     }
 
     public LionRenderer(EntityRendererFactory.Context context) {
         super(context, new LionModel(context.getPart(ModModelLayers.NORMAL_LION_MODEL_LAYER)), 0.75f);
         STANDING_MODEL = new LionModel(context.getPart(ModModelLayers.NORMAL_LION_MODEL_LAYER));
         RESTING_MODEL = new LionModel(context.getPart(ModModelLayers.RESTING_LION_MODEL_LAYER));
-        STANDING_MODEL_F = new LionModel(context.getPart(ModModelLayers.NORMAL_LION_MODEL_LAYER_F));
-        RESTING_MODEL_F = new LionModel(context.getPart(ModModelLayers.RESTING_LION_MODEL_LAYER_F));
     }
 
     @Override
@@ -49,16 +49,14 @@ public class LionRenderer extends MobEntityRenderer<Lion, LionRenderState, Entit
     @Override
     public void render(@NotNull LionRenderState state, MatrixStack matrices, VertexConsumerProvider vertexConsumers, int light) {
         if (state.isInPose(EntityPose.CROUCHING) || state.isInPose(EntityPose.SLEEPING)) {
-            if (state.isMale)
-                this.model = RESTING_MODEL;
-            else
-                this.model = RESTING_MODEL_F;
+            this.model = RESTING_MODEL;
         } else {
-            if (state.isMale)
-                this.model = STANDING_MODEL;
-            else
-                this.model = STANDING_MODEL_F;
+            this.model = STANDING_MODEL;
         }
+
+        this.model.getPart("manebone").ifPresent((part) -> {
+            part.visible = state.isMale();
+        });
 
         float scale = state.baby ? 0.5F : 1.0F;
         matrices.scale(scale, scale, scale);

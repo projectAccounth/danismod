@@ -10,11 +10,6 @@ import net.minecraft.registry.Registries;
 import net.minecraft.registry.RegistryKeys;
 import net.minecraft.registry.RegistryKey;
 import net.minecraft.util.Identifier;
-import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.injection.At;
-import org.spongepowered.asm.mixin.injection.Inject;
-import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
-
 import java.util.function.Function;
 
 public class ModItems {
@@ -66,28 +61,5 @@ public class ModItems {
             new Item.Settings()
     );
 
-
-    public static void initialize() {
-        ItemGroupEvents.modifyEntriesEvent(ItemGroups.INGREDIENTS)
-                .register((itemGroup) -> itemGroup.add(ModItems.ELEPHANT_TUSK));
-        ItemGroupEvents.modifyEntriesEvent(ItemGroups.INGREDIENTS)
-                .register((itemGroup) -> itemGroup.add(ModItems.IVORY));
-        ItemGroupEvents.modifyEntriesEvent(ItemGroups.TOOLS)
-                .register((itemGroup) -> itemGroup.add(ModItems.IVORY_HOE));
-        ItemGroupEvents.modifyEntriesEvent(ItemGroups.TOOLS)
-                .register((itemGroup) -> itemGroup.add(ModItems.IVORY_AXE));
-        ItemGroupEvents.modifyEntriesEvent(ItemGroups.TOOLS)
-                .register((itemGroup) -> itemGroup.add(ModItems.IVORY_PICKAXE));
-        ItemGroupEvents.modifyEntriesEvent(ItemGroups.TOOLS)
-                .register((itemGroup) -> itemGroup.add(ModItems.IVORY_SHOVEL));
-        ItemGroupEvents.modifyEntriesEvent(ItemGroups.COMBAT)
-                .register((itemGroup) -> itemGroup.add(ModItems.IVORY_SWORD));
-
-        RegistryKey<ItemGroup> combatKey = ItemGroups.COMBAT;
-
-        ItemGroup combatGroup = Registries.ITEM_GROUP.get(combatKey);
-        if (combatGroup != null) {
-            combatGroup.modifyEntries(entries -> entries.add(new ItemStack(MY_SWORD)));
-        }
-    }
+    public static void initialize() {}
 }

@@ -11,16 +11,10 @@ public class ModModelLayers {
             new EntityModelLayer(Identifier.of("danismod", "lion"), "standing");
     public static final EntityModelLayer RESTING_LION_MODEL_LAYER =
             new EntityModelLayer(Identifier.of("danismod", "lion"), "laying");
-    public static final EntityModelLayer NORMAL_LION_MODEL_LAYER_F =
-            new EntityModelLayer(Identifier.of("danismod", "lion"), "standing_f");
-    public static final EntityModelLayer RESTING_LION_MODEL_LAYER_F =
-            new EntityModelLayer(Identifier.of("danismod", "lion"), "laying_f");
 
     public static void initialize() {
         EntityModelLayerRegistry.registerModelLayer(ModModelLayers.ELEPHANT_MODEL_LAYER, ElephantModel::getTexturedModelData);
         EntityModelLayerRegistry.registerModelLayer(ModModelLayers.NORMAL_LION_MODEL_LAYER, LionModel::getStandingModel);
         EntityModelLayerRegistry.registerModelLayer(ModModelLayers.RESTING_LION_MODEL_LAYER, LionModel::getLyingModel);
-        EntityModelLayerRegistry.registerModelLayer(ModModelLayers.NORMAL_LION_MODEL_LAYER_F, LionModel::getFemaleStandingModel);
-        EntityModelLayerRegistry.registerModelLayer(ModModelLayers.RESTING_LION_MODEL_LAYER_F, LionModel::getFemaleLyingModel);
     }
 }

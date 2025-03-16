@@ -8,5 +8,7 @@
   "item.danismod.ivory_shovel": "Ivory Shovel",
 
   "entity.danismod.lion": "Lion",
-  "entity.danismod.elephant": "Elephant"
+  "entity.danismod.elephant": "Elephant",
+
+  "itemGroup.danismod.mod_group": "Dani's Mod"
 }

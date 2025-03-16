@@ -15,7 +15,10 @@ import net.minecraft.world.LocalDifficulty;
 import net.minecraft.world.ServerWorldAccess;
 import net.minecraft.world.World;
 import net.minecraft.entity.player.PlayerEntity;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+
+import java.util.List;
 
 public class Elephant extends AnimalEntity {
 
@@ -33,7 +36,7 @@ public class Elephant extends AnimalEntity {
         this.goalSelector.add(3, new LookAtEntityGoal(this, PlayerEntity.class, 6.0f)); // Look at players
 
         // Attack only when provoked
-        this.goalSelector.add(3, new MeleeAttackGoal(this, 1.25, false));
+        this.goalSelector.add(3, new MeleeAttackGoal(this, 1.4, false));
         this.goalSelector.add(3, new RevengeGoal(this)); // Attacks back when attacked
     }
 
@@ -61,6 +64,9 @@ public class Elephant extends AnimalEntity {
     public boolean damage(ServerWorld world, DamageSource source, float amount) {
         boolean damaged = super.damage(world, source, amount);
         if (damaged && source.getAttacker() instanceof LivingEntity attacker) {
+            List<Elephant> nearbyElephants = this.getNearbyElephants();
+            for (Elephant elephant : nearbyElephants)
+                elephant.setTarget(attacker);
             this.setTarget(attacker);
         }
         return damaged;
@@ -92,7 +98,7 @@ public class Elephant extends AnimalEntity {
     }
 
     @Override
-    public boolean isBreedingItem(ItemStack stack) {
+    public boolean isBreedingItem(@NotNull ItemStack stack) {
         return stack.isOf(Items.APPLE) || stack.isOf(Items.HAY_BLOCK);
     }
 
@@ -117,5 +123,13 @@ public class Elephant extends AnimalEntity {
     @Override
     public float getScaleFactor() {
         return this.isBaby() ? 0.5F : 1.0F; // 50% size for babies
+    }
+
+    public List<Elephant> getNearbyElephants() {
+        return this.getWorld().getEntitiesByClass(
+                Elephant.class,
+                this.getBoundingBox().expand(40, 10, 40),
+                elephant -> elephant != this
+        );
     }
 }

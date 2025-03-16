@@ -6,6 +6,7 @@ import net.minecraft.client.render.entity.model.EntityModel;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.util.math.MathHelper;
 import org.danismod.danismod.client.mobsrenderer.renderstates.ElephantRenderState;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.Random;
 
@@ -88,7 +89,7 @@ public class ElephantModel extends EntityModel<ElephantRenderState> {
     }
 
     @Override
-    public void setAngles(ElephantRenderState state) {
+    public void setAngles(@NotNull ElephantRenderState state) {
         float maxHeadYaw = 45F * ((float) Math.PI / 180F); // Max head rotation in radians
         float headPitchTarget = MathHelper.clamp(state.pitch, -20F, 20F) * ((float) Math.PI / 180F);
 

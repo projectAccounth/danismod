@@ -28,7 +28,7 @@ public class Lion extends AnimalEntity {
     public Lion prideLeader;
     public final List<Lion> prideMembers = new ArrayList<>();
 
-    private boolean isMale;
+    private Boolean isMale = this.getRandom().nextFloat() < 0.5F;
 
     public boolean hasLeader() {
         return prideLeader != null;
@@ -102,7 +102,7 @@ public class Lion extends AnimalEntity {
             }
         }
 
-        isMale = this.getRandom().nextBoolean();
+        isMale = this.getRandom().nextFloat() < 0.5F;
         System.out.println("New lion's gender: " + (isMale ? "Male" : "Female"));
 
         // Find nearby lions to form a pride
@@ -288,7 +288,7 @@ public class Lion extends AnimalEntity {
         return isResting;
     }
 
-    public boolean isMale() {
+    public Boolean isMale() {
         return isMale;
     }
 

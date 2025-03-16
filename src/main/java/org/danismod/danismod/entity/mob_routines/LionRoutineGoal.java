@@ -27,6 +27,14 @@ public class LionRoutineGoal extends Goal {
         return lion.getRandom().nextFloat() <= 0.8F; // 80%
     }
 
+    private float getRoamChance() {
+        return lion.getWorld().isDay() ? 0.3F : 0.9F;
+    }
+
+    private int getTargetBoundingBox() {
+        return lion.getWorld().isDay() ? 8 : 20;
+    }
+
     @Override
     public void start() {
         if (!(lion instanceof Lion lionEntity)) return;
@@ -35,13 +43,11 @@ public class LionRoutineGoal extends Goal {
         List<MobEntity> prey = this.findNearbyPreys(); // Find prey before making a decision
         lionEntity.doWakeUp();
 
-        float roamChance = lionEntity.getWorld().isDay() ? 0.3F : 0.8F;
-
         if (!prey.isEmpty() && !lionEntity.isBaby()) {
             if (lionEntity.isBaby()) return;
             hunt(prey); // Hunt if prey is found
             System.out.println("Found prey! Hunting...");
-        } else if (lionEntity.getRandom().nextFloat() < roamChance) {
+        } else if (lionEntity.getRandom().nextFloat() < getRoamChance()) {
             roam(); // Roam if no prey is nearby
             System.out.println("No prey nearby. Roaming...");
         } else {
@@ -90,7 +96,7 @@ public class LionRoutineGoal extends Goal {
     private List<MobEntity> findNearbyPreys() {
         return lion.getWorld().getEntitiesByClass(
                 MobEntity.class,
-                lion.getBoundingBox().expand(20), // 10-block radius
+                lion.getBoundingBox().expand(getTargetBoundingBox(), 8, getTargetBoundingBox()),
                 this::isValidPrey // Only select valid prey
         );
     }
