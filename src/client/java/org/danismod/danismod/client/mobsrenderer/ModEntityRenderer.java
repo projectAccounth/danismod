@@ -11,5 +11,6 @@ public class ModEntityRenderer {
     public static void registerRenderers() {
         EntityRendererRegistry.register(ModEntities.ELEPHANT, ElephantRenderer::new);
         EntityRendererRegistry.register(ModEntities.LION, LionRenderer::new);
+        EntityRendererRegistry.register(ModEntities.BUFFALO, BuffaloRenderer::new);
     }
 }

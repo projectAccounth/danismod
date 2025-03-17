@@ -54,9 +54,7 @@ public class LionRenderer extends MobEntityRenderer<Lion, LionRenderState, Entit
             this.model = STANDING_MODEL;
         }
 
-        this.model.getPart("manebone").ifPresent((part) -> {
-            part.visible = state.isMale();
-        });
+        this.model.getPart("manebone").ifPresent((part) -> part.visible = state.isMale());
 
         float scale = state.baby ? 0.5F : 1.0F;
         matrices.scale(scale, scale, scale);

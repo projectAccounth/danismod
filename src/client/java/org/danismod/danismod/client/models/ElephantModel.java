@@ -114,18 +114,6 @@ public class ElephantModel extends EntityModel<ElephantRenderState> {
         }
 
         // Adjust tail movement naturally
-        float maxTailSwing = 0.8F;
-        float gravityEffect = 0.3F;
-
-        if (limbAmplitude > 0.01F) {
-            this.tail.pitch = MathHelper.sin(limbSwing * 0.5F) * limbAmplitude * 0.4F - gravityEffect;
-        } else {
-            this.tail.pitch = -gravityEffect;
-        }
-
-        this.tail.pitch = MathHelper.clamp(this.tail.pitch, -maxTailSwing, maxTailSwing);
-    }
-    public void render(MatrixStack matrices, VertexConsumer vertexConsumer, int light, int overlay, float red, float green, float blue, float alpha) {
-        root.render(matrices, vertexConsumer, light, overlay);
+        ModModelMethods.animateTail(limbSwing, limbAmplitude, this.tail, -0.8F, -0.3F);
     }
 }

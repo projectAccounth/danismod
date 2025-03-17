@@ -146,15 +146,6 @@ public class LionModel extends EntityModel<LionRenderState> {
 		}
 
 		// Adjust tail movement naturally
-		float maxTailSwing = 0.8F;
-		float gravityEffect = 0.3F;
-
-		if (limbAmplitude > 0.01F) {
-			this.tailbone.pitch = MathHelper.sin(limbSwing * 0.5F) * limbAmplitude * 0.4F - gravityEffect;
-		} else {
-			this.tailbone.pitch = -gravityEffect;
-		}
-
-		this.tailbone.pitch = MathHelper.clamp(this.tailbone.pitch, -maxTailSwing, maxTailSwing);
+		ModModelMethods.animateTail(limbSwing, limbAmplitude, this.tailbone, 0.8F, 0.3F);
 	}
 }

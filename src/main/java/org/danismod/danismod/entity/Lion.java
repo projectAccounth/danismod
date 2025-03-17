@@ -12,11 +12,13 @@ import net.minecraft.item.Items;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundEvents;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.LocalDifficulty;
 import net.minecraft.world.ServerWorldAccess;
 import net.minecraft.world.World;
 import net.minecraft.entity.player.PlayerEntity;
-import org.danismod.danismod.entity.mob_routines.FollowPrideLeaderGoal;
+import org.danismod.danismod.entity.mob_routines.FollowLeaderGoal;
+import org.danismod.danismod.entity.mob_routines.HasLeaderEntity;
 import org.danismod.danismod.entity.mob_routines.LionRoutineGoal;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -24,7 +26,7 @@ import org.jetbrains.annotations.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Lion extends AnimalEntity {
+public class Lion extends AnimalEntity implements HasLeaderEntity<Lion> {
     public Lion prideLeader;
     public final List<Lion> prideMembers = new ArrayList<>();
 
@@ -137,7 +139,7 @@ public class Lion extends AnimalEntity {
         // this.goalSelector.add(1, new EscapeDangerGoal(this, 1.4)); // Shouldn't be scared
 
         this.goalSelector.add(1, new LionRoutineGoal(this)); // Custom AI for roaming, hunting, sleeping
-        this.goalSelector.add(2, new FollowPrideLeaderGoal(this, 1.2)); // Follow leader if in a pride
+        this.goalSelector.add(2, new FollowLeaderGoal<>(this, 1.2)); // Follow leader if in a pride
 
         this.goalSelector.add(3, new AnimalMateGoal(this, 1.25)); // Breeding behavior
         // this.goalSelector.add(3, new WanderAroundFarGoal(this, 1.0)); // Roam when not in routine
@@ -166,6 +168,13 @@ public class Lion extends AnimalEntity {
         LivingEntity target = this.getWorld().getClosestPlayer(this, 15.0);
         if (target != null) {
             this.getLookControl().lookAt(target, 45.0F, 45.0F);
+        }
+        if (this.isTouchingWater()) {
+            Vec3d escapeDirection = this.getPos().subtract(0, 0, 1).normalize();
+            this.getNavigation().startMovingTo(this.getX() + escapeDirection.x * 3,
+                    this.getY(),
+                    this.getZ() + escapeDirection.z * 3,
+                    1.5);
         }
     }
 
