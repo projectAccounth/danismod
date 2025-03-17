@@ -6,9 +6,13 @@
   "item.danismod.ivory_sword": "Ivory Sword",
   "item.danismod.ivory_hoe": "Ivory Hoe",
   "item.danismod.ivory_shovel": "Ivory Shovel",
+  "item.danismod.lion_spawn_egg": "Lion Spawn Egg",
+  "item.danismod.elephant_spawn_egg": "Elephant Spawn Egg",
+  "item.danismod.buffalo_spawn_egg": "Buffalo Spawn Egg",
 
   "entity.danismod.lion": "Lion",
   "entity.danismod.elephant": "Elephant",
+  "entity.danismod.buffalo": "Buffalo",
 
   "itemGroup.danismod.mod_group": "Dani's Mod"
 }

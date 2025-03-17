@@ -10,6 +10,8 @@ import net.minecraft.registry.Registries;
 import net.minecraft.registry.RegistryKeys;
 import net.minecraft.registry.RegistryKey;
 import net.minecraft.util.Identifier;
+import org.danismod.danismod.entity.ModEntities;
+
 import java.util.function.Function;
 
 public class ModItems {
@@ -58,6 +60,18 @@ public class ModItems {
     public static final Item IVORY_SHOVEL = register(
             "ivory_shovel",
             settings -> new ShovelItem(IVORY_TOOL_MATERIAL, 3f, 1.7f, settings),
+            new Item.Settings()
+    );
+
+    public static Item ELEPHANT_SPAWN_EGG = register(
+            "elephant_spawn_egg",
+            settings -> new SpawnEggItem(ModEntities.ELEPHANT, settings),
+            new Item.Settings()
+    );
+
+    public static Item LION_SPAWN_EGG = register(
+            "lion_spawn_egg",
+            settings -> new SpawnEggItem(ModEntities.LION, settings),
             new Item.Settings()
     );
 

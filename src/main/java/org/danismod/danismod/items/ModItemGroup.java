@@ -20,6 +20,8 @@ public class ModItemGroup {
                 entries.add(ModItems.IVORY_AXE);
                 entries.add(ModItems.ELEPHANT_TUSK);
                 entries.add(ModItems.IVORY);
+                entries.add(ModItems.ELEPHANT_SPAWN_EGG);
+                entries.add(ModItems.LION_SPAWN_EGG);
             })
             .build();
 
