@@ -23,6 +23,7 @@ import org.jetbrains.annotations.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 
+// reusing code
 public class Buffalo extends AnimalEntity implements HasLeaderEntity<Buffalo> {
 
     public Buffalo(EntityType<? extends AnimalEntity> entityType, World world) {
@@ -42,18 +43,18 @@ public class Buffalo extends AnimalEntity implements HasLeaderEntity<Buffalo> {
         this.goalSelector.add(3, new LookAtEntityGoal(this, PlayerEntity.class, 6.0f)); // Look at players
 
         // Attack only when provoked
-        this.goalSelector.add(3, new MeleeAttackGoal(this, 1.4, false));
+        this.goalSelector.add(3, new MeleeAttackGoal(this, 1.8, false));
         this.goalSelector.add(3, new RevengeGoal(this)); // Attacks back when attacked
     }
 
     public static DefaultAttributeContainer.Builder createMobAttributes() {
         return LivingEntity.createLivingAttributes()
-                .add(EntityAttributes.MAX_HEALTH, 70.0)  // High health
-                .add(EntityAttributes.MOVEMENT_SPEED, 0.2) // Normal walking speed
+                .add(EntityAttributes.MAX_HEALTH, 60.0)  // High health
+                .add(EntityAttributes.MOVEMENT_SPEED, 0.28) // Normal walking speed
                 .add(EntityAttributes.ATTACK_DAMAGE, 23.0)
-                .add(EntityAttributes.FOLLOW_RANGE, 20.0)
-                .add(EntityAttributes.KNOCKBACK_RESISTANCE, 2)
-                .add(EntityAttributes.ATTACK_KNOCKBACK, 3);
+                .add(EntityAttributes.FOLLOW_RANGE, 50.0)
+                .add(EntityAttributes.KNOCKBACK_RESISTANCE, 1.5)
+                .add(EntityAttributes.ATTACK_KNOCKBACK, 2.4);
     }
 
     @Override
@@ -105,7 +106,7 @@ public class Buffalo extends AnimalEntity implements HasLeaderEntity<Buffalo> {
 
     @Override
     public boolean isBreedingItem(@NotNull ItemStack stack) {
-        return stack.isOf(Items.APPLE) || stack.isOf(Items.HAY_BLOCK);
+        return stack.isOf(Items.HAY_BLOCK);
     }
 
     public Buffalo groupLeader;
@@ -147,6 +148,7 @@ public class Buffalo extends AnimalEntity implements HasLeaderEntity<Buffalo> {
                 Buffalo newLeader = groupMembers.get(0);
                 for (Buffalo buffalo : groupMembers) {
                     if (buffalo.age > newLeader.age) {
+                        // re-assigned local variable (checked, shouldn't cause problems)
                         newLeader = buffalo;
                     }
                 }
@@ -189,6 +191,7 @@ public class Buffalo extends AnimalEntity implements HasLeaderEntity<Buffalo> {
         if (nearbyBuffalos.isEmpty()) {
             this.setLeader(this); // If no leader exists, become one
         } else {
+            // how the hell am I going to use getFirst() in JDK20?
             Buffalo leader = nearbyBuffalos.get(0).getLeader();
             if (leader == null || !leader.isAlive()) {
                 leader = findNewLeader();
