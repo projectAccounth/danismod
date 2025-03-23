@@ -35,7 +35,7 @@ public class Buffalo extends AnimalEntity implements HasLeaderEntity<Buffalo> {
         this.goalSelector.add(0, new SwimGoal(this)); // Swim when in water
         // this.goalSelector.add(1, new EscapeDangerGoal(this, 1.4)); // Run away from danger
         this.goalSelector.add(1, new AnimalMateGoal(this, 1.25)); // Breeding behavior
-        this.goalSelector.add(2, new WanderAroundFarGoal(this, 1.0)); // Roam around
+        this.goalSelector.add(3, new WanderAroundFarGoal(this, 1.0)); // Roam around
 
         this.goalSelector.add(2, new FollowLeaderGoal<>(this, 1.2));
 

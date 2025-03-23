@@ -35,6 +35,9 @@ public class LionRoutineGoal extends Goal {
         return lion.getWorld().isDay() ? 8 : 20;
     }
 
+    // \ge
+    private float getHuntingChanceAtDay() { return lion.getWorld().isDay() ? 0.15F : 0.0F; }
+
     @Override
     public void start() {
         if (!(lion instanceof Lion lionEntity)) return;
@@ -44,6 +47,8 @@ public class LionRoutineGoal extends Goal {
         lionEntity.doWakeUp();
 
         if (!prey.isEmpty() && !lionEntity.isBaby()) {
+            if (lionEntity.getWorld().isDay() && lionEntity.getRandom().nextFloat() > this.getHuntingChanceAtDay())
+                return;
             if (lionEntity.isBaby()) return;
             hunt(prey); // Hunt if prey is found
             System.out.println("Found prey! Hunting...");

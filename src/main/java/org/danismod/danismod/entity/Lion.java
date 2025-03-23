@@ -283,7 +283,7 @@ public class Lion extends AnimalEntity implements HasLeaderEntity<Lion> {
         if (this.getNavigation().isIdle()) {
             this.goToSleep(sleepSpot); // Sleep only after reaching the spot
         }
-        restTime = 100;
+        restTime = this.getWorld().isDay() ? 6000 : 80;
         isResting = true;
     }
 
