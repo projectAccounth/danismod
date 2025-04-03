@@ -31,7 +31,7 @@ public class ModBlocks {
     public static final Block IVORY_GRINDER = register("ivory_grinder",
             IvoryGrinderBlock::new,
             AbstractBlock.Settings.create()
-                    .strength(2.0f)
+                    .strength(1.0f)
                     .sounds(BlockSoundGroup.METAL)
     );
     public static void initialize() {

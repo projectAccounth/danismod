@@ -10,6 +10,7 @@ import net.minecraft.item.ItemPlacementContext;
 import net.minecraft.screen.NamedScreenHandlerFactory;
 import net.minecraft.state.StateManager;
 import net.minecraft.util.ActionResult;
+import net.minecraft.util.ItemScatterer;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
@@ -43,7 +44,7 @@ public class IvoryGrinderBlock extends BlockWithEntity {
 
     @Override
     public BlockState getPlacementState(ItemPlacementContext ctx) {
-        return this.getDefaultState().with(HorizontalFacingBlock.FACING, ctx.getHorizontalPlayerFacing().getOpposite());
+        return this.getDefaultState().with(HorizontalFacingBlock.FACING, ctx.getHorizontalPlayerFacing());
     }
 
 
@@ -67,5 +68,19 @@ public class IvoryGrinderBlock extends BlockWithEntity {
     @Override
     public <T extends BlockEntity> BlockEntityTicker<T> getTicker(World world, BlockState state, BlockEntityType<T> type) {
         return validateTicker(type, ModBlockEntities.IVORY_GRINDER_BLOCK_ENTITY_TYPE, IvoryGrinderBlockEntity::tick);
+    }
+
+    @Override
+    public void onStateReplaced(BlockState state, World world, BlockPos pos, BlockState newState, boolean moved) {
+        if (state.getBlock() == newState.getBlock()) return;
+
+        BlockEntity be = world.getBlockEntity(pos);
+        if (!(be instanceof IvoryGrinderBlockEntity grinderEntity)) return;
+
+        ItemScatterer.spawn(world, pos, grinderEntity);
+        // Clear inventory (prevents ghost items)
+        grinderEntity.clear();
+
+        super.onStateReplaced(state, world, pos, newState, moved);
     }
 }

@@ -2,7 +2,7 @@
   "type": "minecraft:smithing_transform",
   "category": "equipment",
   "base": "minecraft:iron_axe",
-  "addition": "danismod:ivory",
+  "addition": "danismod:reinforced_ivory",
   "result": {
     "count": 1,
     "id": "danismod:ivory_axe"

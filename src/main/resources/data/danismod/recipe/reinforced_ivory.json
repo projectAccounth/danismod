@@ -1,0 +1,15 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "BBB",
+    "BIB",
+    "BBB"
+  ],
+  "key": {
+    "B": "danismod:ivory",
+    "I": "minecraft:iron_ingot"
+  },
+  "result": {
+    "id": "danismod:reinforced_ivory"
+  }
+}

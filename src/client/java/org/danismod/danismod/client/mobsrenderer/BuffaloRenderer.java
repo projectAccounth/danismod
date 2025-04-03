@@ -1,6 +1,5 @@
 package org.danismod.danismod.client.mobsrenderer;
 
-import net.minecraft.block.AnvilBlock;
 import net.minecraft.client.render.VertexConsumerProvider;
 import net.minecraft.client.render.entity.EntityRendererFactory;
 import net.minecraft.client.render.entity.MobEntityRenderer;

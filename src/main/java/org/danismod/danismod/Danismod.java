@@ -8,6 +8,7 @@ import org.danismod.danismod.items.ModItemGroup;
 import org.danismod.danismod.items.ModItems;
 import net.fabricmc.api.ModInitializer;
 import org.danismod.danismod.sounds.ModSoundEvents;
+import org.danismod.others.GrinderFuelRegistry;
 
 public class Danismod implements ModInitializer {
     public static final String MOD_ID = "danismod";
@@ -21,5 +22,6 @@ public class Danismod implements ModInitializer {
         ModEntitySpawns.registerSpawns();
         ModSoundEvents.registerModSounds();
         ModBlockEntities.register();
+        GrinderFuelRegistry.initialize();
     }
 }

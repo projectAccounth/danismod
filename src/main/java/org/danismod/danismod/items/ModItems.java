@@ -35,30 +35,31 @@ public class ModItems {
 
     public static final Item ELEPHANT_TUSK = register("elephant_tusk", Item::new, new Item.Settings());
     public static final Item IVORY = register("ivory", Item::new, new Item.Settings());
+    public static final Item IVORY_INGOT = register("reinforced_ivory", Item::new, new Item.Settings());
 
     public static final Item IVORY_SWORD = register(
             "ivory_sword",
-            settings -> new SwordItem(IVORY_TOOL_MATERIAL, 5f, 1.2f, settings),
+            settings -> new SwordItem(IVORY_TOOL_MATERIAL, 5f, .8f, settings),
             new Item.Settings()
     );
     public static final Item IVORY_HOE = register(
             "ivory_hoe",
-            settings -> new HoeItem(IVORY_TOOL_MATERIAL, 3f, 1.7f, settings),
+            settings -> new HoeItem(IVORY_TOOL_MATERIAL, 3f, .6f, settings),
             new Item.Settings()
     );
     public static final Item IVORY_PICKAXE = register(
             "ivory_pickaxe",
-            settings -> new PickaxeItem(IVORY_TOOL_MATERIAL, 4f, 1.7f, settings),
+            settings -> new PickaxeItem(IVORY_TOOL_MATERIAL, 4f, .6f, settings),
             new Item.Settings()
     );
     public static final Item IVORY_AXE = register(
             "ivory_axe",
-            settings -> new AxeItem(IVORY_TOOL_MATERIAL, 8f, 1.9f, settings),
+            settings -> new AxeItem(IVORY_TOOL_MATERIAL, 8f, .5f, settings),
             new Item.Settings()
     );
     public static final Item IVORY_SHOVEL = register(
             "ivory_shovel",
-            settings -> new ShovelItem(IVORY_TOOL_MATERIAL, 3f, 1.7f, settings),
+            settings -> new ShovelItem(IVORY_TOOL_MATERIAL, 3f, .6f, settings),
             new Item.Settings()
     );
 

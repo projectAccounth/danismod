@@ -4,7 +4,6 @@ import net.minecraft.registry.Registries;
 import net.minecraft.registry.Registry;
 import net.minecraft.resource.featuretoggle.FeatureFlags;
 import net.minecraft.screen.ScreenHandler;
-import net.minecraft.screen.ScreenHandlerFactory;
 import net.minecraft.screen.ScreenHandlerType;
 
 public class ModScreenHandlers {

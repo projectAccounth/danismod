@@ -9,10 +9,15 @@
   "item.danismod.lion_spawn_egg": "Lion Spawn Egg",
   "item.danismod.elephant_spawn_egg": "Elephant Spawn Egg",
   "item.danismod.buffalo_spawn_egg": "Buffalo Spawn Egg",
+  "item.danismod.reinforced_ivory": "Reinforced Ivory",
 
   "entity.danismod.lion": "Lion",
   "entity.danismod.elephant": "Elephant",
   "entity.danismod.buffalo": "Buffalo",
 
-  "itemGroup.danismod.mod_group": "Dani's Mod"
+  "block.danismod.ivory_grinder": "Ivory Grinder",
+
+  "itemGroup.danismod.mod_group": "Dani's Mod",
+
+  "container.danismod.ivory_grinder": "Ivory Grinder"
 }

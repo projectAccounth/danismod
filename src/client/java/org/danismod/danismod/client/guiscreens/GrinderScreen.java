@@ -2,12 +2,9 @@ package org.danismod.danismod.client.guiscreens;
 
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.DrawContext;
-import net.minecraft.client.gui.screen.ingame.FurnaceScreen;
 import net.minecraft.client.gui.screen.ingame.HandledScreen;
 import net.minecraft.client.render.RenderLayer;
-import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
@@ -18,6 +15,7 @@ import org.danismod.danismod.screenhandlers.GrinderScreenHandler;
 public class GrinderScreen extends HandledScreen<GrinderScreenHandler> {
     private static final Identifier TEXTURE = Identifier.of("danismod", "textures/gui/grinder.png");
     private static final Identifier PROGRESS_TEXTURE = Identifier.ofVanilla("container/furnace/burn_progress");
+    private static final Identifier FUEL_TEXTURE = Identifier.ofVanilla("container/brewing_stand/fuel_length");
 
     public GrinderScreen(GrinderScreenHandler handler, PlayerInventory inventory, Text title) {
         super(handler, inventory, title);
@@ -32,6 +30,12 @@ public class GrinderScreen extends HandledScreen<GrinderScreenHandler> {
         int progressWidth = MathHelper.ceil(progress * 24); // Scale from 0-24 pixels
 
         ctx.drawGuiTexture(RenderLayer::getGuiTextured, PROGRESS_TEXTURE, 24, 16, 0, 0, this.x + 79, this.y + 34, progressWidth, 16);
+
+        float remainingFuel = handler.getRemainingFuel();
+        int length = MathHelper.ceil(remainingFuel * 18);
+        if (length > 0) {
+            ctx.drawGuiTexture(RenderLayer::getGuiTextured, FUEL_TEXTURE, 18, 4, 0, 0, this.x + 30, this.y + 26, length, 4);
+        }
     }
 
     @Override
