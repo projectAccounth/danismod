@@ -20,8 +20,12 @@ public class ModItems {
         Item item = itemFactory.apply(settings.registryKey(itemKey));
 
         Registry.register(Registries.ITEM, itemKey, item);
-
+        
         return item;
+    }
+
+    public static Item register(String name, Item.Settings settings) {
+        return register(name, Item::new, settings);
     }
 
     public static final ToolMaterial IVORY_TOOL_MATERIAL = new ToolMaterial(
@@ -32,15 +36,13 @@ public class ModItems {
             22,
             ItemTags.ARMOR_ENCHANTABLE
     );
-
     public static final Item ELEPHANT_TUSK = register("elephant_tusk", Item::new, new Item.Settings());
     public static final Item IVORY = register("ivory", Item::new, new Item.Settings());
     public static final Item IVORY_INGOT = register("reinforced_ivory", Item::new, new Item.Settings());
 
     public static final Item IVORY_SWORD = register(
             "ivory_sword",
-            settings -> new SwordItem(IVORY_TOOL_MATERIAL, 5f, .8f, settings),
-            new Item.Settings()
+            (new Item.Settings()).sword(IVORY_TOOL_MATERIAL, 5f, .8f)
     );
     public static final Item IVORY_HOE = register(
             "ivory_hoe",
@@ -49,8 +51,7 @@ public class ModItems {
     );
     public static final Item IVORY_PICKAXE = register(
             "ivory_pickaxe",
-            settings -> new PickaxeItem(IVORY_TOOL_MATERIAL, 4f, .6f, settings),
-            new Item.Settings()
+            (new Item.Settings()).pickaxe(IVORY_TOOL_MATERIAL, 4f, .6f)
     );
     public static final Item IVORY_AXE = register(
             "ivory_axe",

@@ -8,6 +8,7 @@ import net.minecraft.block.entity.BlockEntityType;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemPlacementContext;
 import net.minecraft.screen.NamedScreenHandlerFactory;
+import net.minecraft.server.world.ServerWorld;
 import net.minecraft.state.StateManager;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.ItemScatterer;
@@ -71,9 +72,7 @@ public class IvoryGrinderBlock extends BlockWithEntity {
     }
 
     @Override
-    public void onStateReplaced(BlockState state, World world, BlockPos pos, BlockState newState, boolean moved) {
-        if (state.getBlock() == newState.getBlock()) return;
-
+    public void onStateReplaced(BlockState state, ServerWorld world, BlockPos pos, boolean moved) {
         BlockEntity be = world.getBlockEntity(pos);
         if (!(be instanceof IvoryGrinderBlockEntity grinderEntity)) return;
 
@@ -81,6 +80,6 @@ public class IvoryGrinderBlock extends BlockWithEntity {
         // Clear inventory (prevents ghost items)
         grinderEntity.clear();
 
-        super.onStateReplaced(state, world, pos, newState, moved);
+        super.onStateReplaced(state, world, pos, moved);
     }
 }

@@ -1,13 +1,6 @@
 {
-  "parent": "minecraft:item/template_spawn_egg",
-    "tints": [
-      {
-        "type": "minecraft:constant",
-        "value": -1536476
-      },
-      {
-        "type": "minecraft:constant",
-        "value": 2824975
-      }
-    ]
+  "parent": "minecraft:item/generated",
+  "textures": {
+    "layer0": "danismod:item/placeholder_egg"
+  }
 }

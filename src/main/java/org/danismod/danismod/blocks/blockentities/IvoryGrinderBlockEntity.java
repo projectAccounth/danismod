@@ -228,7 +228,7 @@ public class IvoryGrinderBlockEntity extends BlockEntity implements NamedScreenH
         super.readNbt(nbt, registries);
         this.inventory = DefaultedList.ofSize(this.size(), ItemStack.EMPTY);
 		Inventories.readNbt(nbt, this.inventory, registries);
-        this.fuelUsesLeft = nbt.getInt("FuelUsesLeft");
-        this.progress = nbt.getInt("Progress");
+        this.fuelUsesLeft = nbt.getInt("FuelUsesLeft").get();
+        this.progress = nbt.getInt("Progress").get();
     }
 }
