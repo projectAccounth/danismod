@@ -48,7 +48,7 @@ public class Lion extends AnimalEntity implements HasLeaderEntity<Lion> {
     @Nullable
     private Lion findNewLeader() {
         if (!this.hasLeader() || this.prideLeader == null || !this.prideLeader.isAlive()) {
-            List<Lion> prideMembers = getNearbyEntities(prideLeader);
+            List<Lion> prideMembers = getNearbyEntities(this);
 
             // Prioritize an adult lion
             for (Lion lion : prideMembers) {
@@ -70,7 +70,7 @@ public class Lion extends AnimalEntity implements HasLeaderEntity<Lion> {
                 return this;
             }
         }
-        return getLeader();
+        return null;
     }
 
     public Lion getLeader() {
@@ -170,34 +170,14 @@ public class Lion extends AnimalEntity implements HasLeaderEntity<Lion> {
     }
 
     public void doWakeUp() {
-        super.wakeUp();
-        stopResting();
-        this.goalSelector.enableControl(Goal.Control.MOVE);
-        this.goalSelector.enableControl(Goal.Control.LOOK);
-        this.goalSelector.enableControl(Goal.Control.TARGET);
-    }
-
-    public void goToSleep(BlockPos pos) {
-        layDown();
-        this.setTarget(null); // Stop targeting prey
-        this.goalSelector.disableControl(Goal.Control.MOVE);
-        this.goalSelector.disableControl(Goal.Control.LOOK);
-        this.goalSelector.disableControl(Goal.Control.TARGET);
-    }
-
-    public void standUp() {
+        restTime = 0;
+        isResting = false;
         this.goalSelector.enableControl(Goal.Control.MOVE);
         this.goalSelector.enableControl(Goal.Control.LOOK);
         this.goalSelector.enableControl(Goal.Control.TARGET);
         this.setPose(EntityPose.STANDING);
         this.setMovementSpeed(1.0F);
-    }
-
-    public void layDown() {
-        this.goalSelector.disableControl(Goal.Control.MOVE);
-        this.setPose(EntityPose.CROUCHING);
-        this.setMovementSpeed(0.0F);
-        this.getNavigation().stop();
+        this.goalSelector.getGoals().forEach(goal -> goal.start());
     }
 
     @Override
@@ -208,6 +188,7 @@ public class Lion extends AnimalEntity implements HasLeaderEntity<Lion> {
             if (attacker.isInCreativeMode() || attacker.isSpectator()) return damaged;
             if (attacker instanceof PlayerEntity && world.getDifficulty() == Difficulty.PEACEFUL) 
                 return damaged;
+            if (squaredDistanceTo(attacker) > 900.0D) return damaged;
 
             doWakeUp();
             if (!prideMembers.isEmpty()) {
@@ -274,25 +255,28 @@ public class Lion extends AnimalEntity implements HasLeaderEntity<Lion> {
 
         if (restTime <= 0) {
             isResting = false; // Stop resting after the timer runs out
-            stopResting(); // Switch back to standing pose
+            doWakeUp(); // Switch back to standing pose
             System.out.println("Lion is standing up!");
         }
     }
 
     public void rest() {
-        var sleepSpot = this.findSleepingSpot();
-        this.getNavigation().startMovingTo(sleepSpot.getX(), sleepSpot.getY(), sleepSpot.getZ(), 1.0);
-        if (this.getNavigation().isIdle()) {
-            this.goToSleep(sleepSpot); // Sleep only after reaching the spot
-        }
-        restTime = this.getWorld().isDay() ? 6000 : 80;
-        isResting = true;
-    }
+        if (getSleepingSpot() == null) findSleepingSpot();
+        BlockPos sleepingSpot = getSleepingSpot();
+        this.getNavigation().startMovingTo(sleepingSpot.getX(), sleepingSpot.getY(), sleepingSpot.getZ(), 1.0);
+        if (this.squaredDistanceTo(sleepingSpot.getX(), sleepingSpot.getY(), sleepingSpot.getZ()) <= 25) {
+            this.goalSelector.disableControl(Goal.Control.MOVE);
+            this.goalSelector.disableControl(Goal.Control.LOOK);
+            this.goalSelector.disableControl(Goal.Control.TARGET);
 
-    public void stopResting() {
-        standUp();
-        restTime = 0;
-        isResting = false;
+            this.getNavigation().stop();
+            this.setVelocity(0, 0, 0);
+            this.getNavigation().stop();
+            this.setPose(EntityPose.CROUCHING);
+            this.setMovementSpeed(0.0F);
+        }
+        restTime = this.getWorld().isDay() ? 800 : 60;
+        isResting = true;
     }
 
     public boolean isResting() {
@@ -319,7 +303,7 @@ public class Lion extends AnimalEntity implements HasLeaderEntity<Lion> {
 
     public BlockPos findSleepingSpot() {
         if (this.sleepingSpot != null &&
-            this.sleepingSpot.isWithinDistance(this.getBlockPos(), 10) &&
+            this.sleepingSpot.isWithinDistance(this.getBlockPos(), 20) &&
             !isShaded(this.sleepingSpot, this.getWorld())
         ) {
             return this.sleepingSpot; // Return the remembered spot

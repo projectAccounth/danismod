@@ -68,9 +68,11 @@ public class Elephant extends AnimalEntity {
     public boolean damage(ServerWorld world, DamageSource source, float amount) {
         boolean damaged = super.damage(world, source, amount);
         if (damaged && source.getAttacker() instanceof LivingEntity attacker) {
+            if (attacker.isInCreativeMode() || attacker.isSpectator()) return damaged;
             if (attacker instanceof PlayerEntity && world.getDifficulty() == Difficulty.PEACEFUL) 
                 return damaged;
-                
+            if (squaredDistanceTo(attacker) > 900.0D) return damaged;
+
             List<Elephant> nearbyElephants = this.getNearbyElephants();
             for (Elephant elephant : nearbyElephants)
                 elephant.setTarget(attacker);

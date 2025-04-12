@@ -73,9 +73,10 @@ public class Buffalo extends AnimalEntity implements HasLeaderEntity<Buffalo> {
     public boolean damage(ServerWorld world, DamageSource source, float amount) {
         boolean damaged = super.damage(world, source, amount);
         if (damaged && source.getAttacker() instanceof LivingEntity attacker) {
+            if (attacker.isInCreativeMode() || attacker.isSpectator()) return damaged;
             if (attacker instanceof PlayerEntity && world.getDifficulty() == Difficulty.PEACEFUL) 
                 return damaged;
-            if (attacker.isInCreativeMode() || attacker.isSpectator()) return damaged;
+            if (squaredDistanceTo(attacker) > 900.0D) return damaged;
 
             List<Buffalo> nearbyBuffalos = getNearbyEntities(this);
 
@@ -139,20 +140,10 @@ public class Buffalo extends AnimalEntity implements HasLeaderEntity<Buffalo> {
         }
     }
 
-    public List<Buffalo> getNearbyMembers() {
-        Buffalo leader = this.getLeader(); // Store leader once to avoid repeated calls
-
-        return this.getWorld().getEntitiesByClass(
-                Buffalo.class,
-                this.getBoundingBox().expand(30), // 30-block radius
-                buffalo -> buffalo != this && buffalo.hasLeader() && buffalo.getLeader() == leader // Check without recursion
-        );
-    }
-
     @Nullable
     private Buffalo findNewLeader() {
         if (!this.hasLeader() || this.groupLeader == null || !this.groupLeader.isAlive()) {
-            List<Buffalo> groupMembers = this.getNearbyMembers();
+            List<Buffalo> groupMembers = getNearbyEntities(this);
 
             for (Buffalo buffalo : groupMembers) {
                 if (!buffalo.isBaby()) {

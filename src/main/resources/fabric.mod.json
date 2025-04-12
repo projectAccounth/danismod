@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "id": "danismod",
-  "version": "alpha-0.0.1",
+  "version": "${version}",
   "name": "danismod",
   "description": "",
   "authors": [],
