@@ -19,12 +19,9 @@
   },
   "mixins": [
   ],
-  "datagen": {
-    "modid": "danismod"
-  },
   "depends": {
-    "fabricloader": ">=${loader_version}",
+    "fabricloader": ">=0.16.10",
     "fabric": "*",
-    "minecraft": "${minecraft_version}"
+    "minecraft": "1.21.5"
   }
 }
