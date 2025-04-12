@@ -7,8 +7,6 @@ import net.minecraft.util.math.MathHelper;
 import org.danismod.danismod.client.mobsrenderer.renderstates.LionRenderState;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.Random;
-
 public class LionModel extends EntityModel<LionRenderState> {
     private final ModelPart leg1bone;
 	private final ModelPart leg2bone;

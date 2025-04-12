@@ -137,7 +137,8 @@ public class LionRoutineGoal extends Goal {
                         return;
                     }
                     for (Lion member : lionEntity.getLeader().prideMembers) {
-                        member.wakeUp();
+                        if (target.isInCreativeMode() || target.isSpectator()) continue;
+                        member.doWakeUp();
                         member.setTarget(target);
                         System.out.println("Set strong target for the pride!");
                     }
@@ -148,7 +149,9 @@ public class LionRoutineGoal extends Goal {
         } else {
             Lion leader = lionEntity.getLeader();
             if (leader == null) return;
-            if (leader.getTarget() != null) {
+
+            LivingEntity target = leader.getTarget();
+            if (target != null && !target.isInCreativeMode() && !target.isSpectator()) {
                 lionEntity.setTarget(leader.getTarget());
                 System.out.println("Going to attack a weak prey!");
                 lionEntity.getNavigation().startMovingTo(leader.getTarget(), 1.5);

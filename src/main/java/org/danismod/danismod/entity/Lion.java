@@ -13,6 +13,7 @@ import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundEvents;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
+import net.minecraft.world.Difficulty;
 import net.minecraft.world.LocalDifficulty;
 import net.minecraft.world.ServerWorldAccess;
 import net.minecraft.world.World;
@@ -44,20 +45,10 @@ public class Lion extends AnimalEntity implements HasLeaderEntity<Lion> {
         }
     }
 
-    public List<Lion> getNearbyPrideMembers() {
-        Lion leader = this.getLeader(); // Store leader once to avoid repeated calls
-
-        return this.getWorld().getEntitiesByClass(
-                Lion.class,
-                this.getBoundingBox().expand(30), // 30-block radius
-                lion -> lion != this && lion.hasLeader() && lion.getLeader() == leader // Check without recursion
-        );
-    }
-
     @Nullable
     private Lion findNewLeader() {
         if (!this.hasLeader() || this.prideLeader == null || !this.prideLeader.isAlive()) {
-            List<Lion> prideMembers = this.getNearbyPrideMembers();
+            List<Lion> prideMembers = getNearbyEntities(prideLeader);
 
             // Prioritize an adult lion
             for (Lion lion : prideMembers) {
@@ -211,8 +202,14 @@ public class Lion extends AnimalEntity implements HasLeaderEntity<Lion> {
 
     @Override
     public boolean damage(ServerWorld world, DamageSource source, float amount) {
-        if (this.getPose() == EntityPose.SLEEPING && source.getAttacker() instanceof LivingEntity attacker) {
-            wakeUp();
+        boolean damaged = super.damage(world, source, amount);
+        if (damaged && this.getPose() == EntityPose.SLEEPING && source.getAttacker() instanceof LivingEntity attacker) {
+
+            if (attacker.isInCreativeMode() || attacker.isSpectator()) return damaged;
+            if (attacker instanceof PlayerEntity && world.getDifficulty() == Difficulty.PEACEFUL) 
+                return damaged;
+
+            doWakeUp();
             if (!prideMembers.isEmpty()) {
                 for (Lion lion : prideMembers) {
                     lion.wakeUp();
@@ -221,12 +218,17 @@ public class Lion extends AnimalEntity implements HasLeaderEntity<Lion> {
             }
             this.setTarget(attacker); // Attack the attacker
         }
-        return super.damage(world, source, amount);
+        return damaged;
     }
 
     @Override
     public boolean tryAttack(ServerWorld world, Entity target) {
-        boolean success = super.tryAttack(world, target);
+        if (!(target instanceof LivingEntity livingTarget)) return false;
+
+        if (livingTarget.isDead()) return false;
+        if (livingTarget.isInCreativeMode() || livingTarget.isSpectator()) return false;
+
+        boolean success = super.tryAttack(world, livingTarget);
         if (success) {
             target.damage(
                     world,
@@ -266,14 +268,14 @@ public class Lion extends AnimalEntity implements HasLeaderEntity<Lion> {
     public void tick() {
         super.tick();
 
-        if (isResting) {
-            restTime--;
+        if (!isResting) return;
 
-            if (restTime <= 0) {
-                isResting = false; // Stop resting after the timer runs out
-                stopResting(); // Switch back to standing pose
-                System.out.println("Lion is standing up!");
-            }
+        restTime--;
+
+        if (restTime <= 0) {
+            isResting = false; // Stop resting after the timer runs out
+            stopResting(); // Switch back to standing pose
+            System.out.println("Lion is standing up!");
         }
     }
 
@@ -329,10 +331,10 @@ public class Lion extends AnimalEntity implements HasLeaderEntity<Lion> {
         for (int x = -15; x <= 15; x++) {
             for (int z = -15; z <= 15; z++) {
                 BlockPos checkPos = currentPos.add(x, 0, z);
-                if (isShaded(checkPos, world)) {
-                    this.setSleepingSpot(checkPos); // Store the spot for later use
-                    return checkPos;
-                }
+                if (!isShaded(checkPos, world)) continue;
+
+                this.setSleepingSpot(checkPos); // Store the spot for later use
+                return checkPos;
             }
         }
 

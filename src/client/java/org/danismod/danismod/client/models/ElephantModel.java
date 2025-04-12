@@ -1,14 +1,11 @@
 package org.danismod.danismod.client.models;
 
 import net.minecraft.client.model.*;
-import net.minecraft.client.render.VertexConsumer;
 import net.minecraft.client.render.entity.model.EntityModel;
-import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.util.math.MathHelper;
 import org.danismod.danismod.client.mobsrenderer.renderstates.ElephantRenderState;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.Random;
 
 public class ElephantModel extends EntityModel<ElephantRenderState> {
     private final ModelPart root;
