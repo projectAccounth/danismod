@@ -11,6 +11,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundEvents;
+import net.minecraft.world.Difficulty;
 import net.minecraft.world.LocalDifficulty;
 import net.minecraft.world.ServerWorldAccess;
 import net.minecraft.world.World;
@@ -67,6 +68,11 @@ public class Elephant extends AnimalEntity {
     public boolean damage(ServerWorld world, DamageSource source, float amount) {
         boolean damaged = super.damage(world, source, amount);
         if (damaged && source.getAttacker() instanceof LivingEntity attacker) {
+            if (attacker.isInCreativeMode() || attacker.isSpectator()) return damaged;
+            if (attacker instanceof PlayerEntity && world.getDifficulty() == Difficulty.PEACEFUL) 
+                return damaged;
+            if (squaredDistanceTo(attacker) > 900.0D) return damaged;
+
             List<Elephant> nearbyElephants = this.getNearbyElephants();
             for (Elephant elephant : nearbyElephants)
                 elephant.setTarget(attacker);
@@ -77,6 +83,11 @@ public class Elephant extends AnimalEntity {
 
     @Override
     public boolean tryAttack(ServerWorld world, Entity target) {
+        if (!(target instanceof LivingEntity livingTarget)) return false;
+
+        if (livingTarget.isDead()) return false;
+        if (livingTarget.isInCreativeMode() || livingTarget.isSpectator()) return false;
+        
         boolean success = super.tryAttack(world, target);
         if (success) {
             target.damage(

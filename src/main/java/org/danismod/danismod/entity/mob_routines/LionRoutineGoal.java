@@ -28,7 +28,7 @@ public class LionRoutineGoal extends Goal {
     }
 
     private float getRoamChance() {
-        return lion.getWorld().isDay() ? 0.3F : 0.9F;
+        return lion.getWorld().isDay() ? 0.2F : 0.9F;
     }
 
     private int getTargetBoundingBox() {
@@ -36,44 +36,43 @@ public class LionRoutineGoal extends Goal {
     }
 
     // \ge
-    private float getHuntingChanceAtDay() { return lion.getWorld().isDay() ? 0.15F : 0.0F; }
+    private float getHuntingChanceAtDay() { return 0.15F; }
 
     @Override
     public void start() {
         if (!(lion instanceof Lion lionEntity)) return;
+        if (lionEntity.getWorld().isNight()) {
+            lionEntity.doWakeUp();
+        } else {
+            lionEntity.rest();
+        }
         if (lionEntity.isResting()) return;
 
-        List<MobEntity> prey = this.findNearbyPreys(); // Find prey before making a decision
-        lionEntity.doWakeUp();
+        List<MobEntity> preys = this.findNearbyPreys(); // Find prey before making a decision
 
-        if (!prey.isEmpty() && !lionEntity.isBaby()) {
-            if (lionEntity.getWorld().isDay() && lionEntity.getRandom().nextFloat() > this.getHuntingChanceAtDay())
-                return;
-            if (lionEntity.isBaby()) return;
-            hunt(prey); // Hunt if prey is found
-            System.out.println("Found prey! Hunting...");
+        if (!preys.isEmpty() && !lionEntity.isBaby()) {
+            if (lionEntity.getWorld().isDay() && 
+                lionEntity.getRandom().nextFloat() < this.getHuntingChanceAtDay()
+            ) return;
+
+            hunt(preys); // Hunt if prey is found
+
+            // System.out.println("Found prey! Hunting...");
         } else if (lionEntity.getRandom().nextFloat() < getRoamChance()) {
             roam(); // Roam if no prey is nearby
-            System.out.println("No prey nearby. Roaming...");
-        } else {
-            rest(); // Rest occasionally when no prey is around
-            System.out.println("No prey nearby. Resting...");
+
+            // System.out.println("No prey nearby. Roaming...");
         }
     }
     private void roam() {
         if (!(lion instanceof Lion lionEntity)) return;
-        lionEntity.stopResting();
+        lionEntity.doWakeUp();
         BlockPos targetPos = lionEntity.getBlockPos().add(
                 lionEntity.getRandom().nextInt(15) - 5,
                 0,
                 lionEntity.getRandom().nextInt(15) - 5
         );
         lionEntity.getNavigation().startMovingTo(targetPos.getX(), targetPos.getY(), targetPos.getZ(), 1.0);
-    }
-
-    private void rest() {
-        if (!(lion instanceof Lion lionEntity)) return;
-        lionEntity.rest();
     }
 
     private void roar() {
@@ -108,7 +107,7 @@ public class LionRoutineGoal extends Goal {
 
     private void hunt(List<MobEntity> nearbyPrey) {
         if (!(lion instanceof Lion lionEntity)) return;
-        lionEntity.stopResting();
+        lionEntity.doWakeUp();
 
         if (!lionEntity.hasLeader() || lionEntity == lionEntity.getLeader()) {
             if (!nearbyPrey.isEmpty()) {
@@ -137,7 +136,8 @@ public class LionRoutineGoal extends Goal {
                         return;
                     }
                     for (Lion member : lionEntity.getLeader().prideMembers) {
-                        member.wakeUp();
+                        if (target.isInCreativeMode() || target.isSpectator()) continue;
+                        member.doWakeUp();
                         member.setTarget(target);
                         System.out.println("Set strong target for the pride!");
                     }
@@ -148,7 +148,9 @@ public class LionRoutineGoal extends Goal {
         } else {
             Lion leader = lionEntity.getLeader();
             if (leader == null) return;
-            if (leader.getTarget() != null) {
+
+            LivingEntity target = leader.getTarget();
+            if (target != null && !target.isInCreativeMode() && !target.isSpectator()) {
                 lionEntity.setTarget(leader.getTarget());
                 System.out.println("Going to attack a weak prey!");
                 lionEntity.getNavigation().startMovingTo(leader.getTarget(), 1.5);

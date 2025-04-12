@@ -12,9 +12,13 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundEvents;
+import net.minecraft.util.math.MathHelper;
+import net.minecraft.world.Difficulty;
 import net.minecraft.world.LocalDifficulty;
 import net.minecraft.world.ServerWorldAccess;
 import net.minecraft.world.World;
+
+import org.danismod.danismod.entity.mob_routines.BuffaloChargeAttackGoal;
 import org.danismod.danismod.entity.mob_routines.FollowLeaderGoal;
 import org.danismod.danismod.entity.mob_routines.HasLeaderEntity;
 import org.jetbrains.annotations.NotNull;
@@ -42,9 +46,7 @@ public class Buffalo extends AnimalEntity implements HasLeaderEntity<Buffalo> {
         this.goalSelector.add(2, new LookAroundGoal(this)); // Look around idly
         this.goalSelector.add(3, new LookAtEntityGoal(this, PlayerEntity.class, 6.0f)); // Look at players
 
-        // Attack only when provoked
-        this.goalSelector.add(3, new MeleeAttackGoal(this, 1.8, false));
-        this.goalSelector.add(3, new RevengeGoal(this)); // Attacks back when attacked
+        this.goalSelector.add(3, new BuffaloChargeAttackGoal(this, 1.9f)); // Charge at godly speed
     }
 
     public static DefaultAttributeContainer.Builder createMobAttributes() {
@@ -71,9 +73,16 @@ public class Buffalo extends AnimalEntity implements HasLeaderEntity<Buffalo> {
     public boolean damage(ServerWorld world, DamageSource source, float amount) {
         boolean damaged = super.damage(world, source, amount);
         if (damaged && source.getAttacker() instanceof LivingEntity attacker) {
-            List<Buffalo> nearbyBuffalos = this.getNearbyBuffalos();
+            if (attacker.isInCreativeMode() || attacker.isSpectator()) return damaged;
+            if (attacker instanceof PlayerEntity && world.getDifficulty() == Difficulty.PEACEFUL) 
+                return damaged;
+            if (squaredDistanceTo(attacker) > 900.0D) return damaged;
+
+            List<Buffalo> nearbyBuffalos = getNearbyEntities(this);
+
             for (Buffalo buffalo : nearbyBuffalos)
                 if (!buffalo.isBaby()) buffalo.setTarget(attacker);
+
             if (!this.isBaby()) this.setTarget(attacker);
         }
         return damaged;
@@ -81,6 +90,12 @@ public class Buffalo extends AnimalEntity implements HasLeaderEntity<Buffalo> {
 
     @Override
     public boolean tryAttack(ServerWorld world, Entity target) {
+        if (!(target instanceof LivingEntity)) return false;
+        LivingEntity livingTarget = (LivingEntity) target;
+
+        if (livingTarget.isDead()) return false;
+        if (livingTarget.isInCreativeMode() || livingTarget.isSpectator()) return false;
+
         boolean success = super.tryAttack(world, target);
         if (success) {
             target.damage(
@@ -88,6 +103,7 @@ public class Buffalo extends AnimalEntity implements HasLeaderEntity<Buffalo> {
                     this.getDamageSources().mobAttack(this),
                     (float) this.getAttributeValue(EntityAttributes.ATTACK_DAMAGE)
             );
+            livingTarget.takeKnockback(1.2F, MathHelper.sin(this.getYaw() * 0.0175F), -MathHelper.cos(this.getYaw() * 0.0175F));
             this.playSound(SoundEvents.ITEM_WOLF_ARMOR_CRACK);
         }
         return success;
@@ -124,20 +140,10 @@ public class Buffalo extends AnimalEntity implements HasLeaderEntity<Buffalo> {
         }
     }
 
-    public List<Buffalo> getNearbyMembers() {
-        Buffalo leader = this.getLeader(); // Store leader once to avoid repeated calls
-
-        return this.getWorld().getEntitiesByClass(
-                Buffalo.class,
-                this.getBoundingBox().expand(30), // 30-block radius
-                buffalo -> buffalo != this && buffalo.hasLeader() && buffalo.getLeader() == leader // Check without recursion
-        );
-    }
-
     @Nullable
     private Buffalo findNewLeader() {
         if (!this.hasLeader() || this.groupLeader == null || !this.groupLeader.isAlive()) {
-            List<Buffalo> groupMembers = this.getNearbyMembers();
+            List<Buffalo> groupMembers = getNearbyEntities(this);
 
             for (Buffalo buffalo : groupMembers) {
                 if (!buffalo.isBaby()) {
@@ -186,12 +192,11 @@ public class Buffalo extends AnimalEntity implements HasLeaderEntity<Buffalo> {
                 this.setBaby(true);
             }
         }
-        List<Buffalo> nearbyBuffalos = getNearbyBuffalos();
+        List<Buffalo> nearbyBuffalos = getNearbyEntities(this);
 
         if (nearbyBuffalos.isEmpty()) {
-            this.setLeader(this); // If no leader exists, become one
+            this.setLeader(this);
         } else {
-            // how the hell am I going to use getFirst() in JDK20?
             Buffalo leader = nearbyBuffalos.get(0).getLeader();
             if (leader == null || !leader.isAlive()) {
                 leader = findNewLeader();
@@ -199,7 +204,6 @@ public class Buffalo extends AnimalEntity implements HasLeaderEntity<Buffalo> {
             this.setLeader(leader);
             if (leader != null) {
                 leader.addMember(this);
-                System.out.println("Found a group for newly spawned buffalo!");
             }
         }
 
@@ -209,13 +213,5 @@ public class Buffalo extends AnimalEntity implements HasLeaderEntity<Buffalo> {
     @Override
     public float getScaleFactor() {
         return this.isBaby() ? 0.5F : 1.0F; // 50% size for babies
-    }
-
-    public List<Buffalo> getNearbyBuffalos() {
-        return this.getWorld().getEntitiesByClass(
-                Buffalo.class,
-                this.getBoundingBox().expand(40, 10, 40),
-                Buffalo -> Buffalo != this
-        );
     }
 }
