@@ -2,7 +2,7 @@ package org.danismod.danismod.entity.mob_routines;
 
 import java.util.EnumSet;
 
-import org.danismod.danismod.entity.Buffalo;
+import org.danismod.danismod.entity.mobs.Buffalo;
 
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.ai.goal.Goal;
@@ -17,40 +17,57 @@ public class BuffaloChargeAttackGoal extends Goal {
     private LivingEntity target;
     private final double chargeSpeed;
     private int chargeCooldown;
+    private int attackCooldown;
+    private int postChargeCooldown;
     private boolean isCharging;
+
+    private final int CHARGE_WINDUP = 25; // in ticks (was 15)
+    private final int POST_CHARGE_COOLDOWN = 40; // in ticks (2 seconds)
+    private final int ATTACK_COOLDOWN = 20; // in ticks (1 second)
+    private final double MIN_CHARGE_DIST = 5;
+    private final double CLOSE_ATTACK_RANGE = 2.5;
 
     public BuffaloChargeAttackGoal(Buffalo buffalo, double chargeSpeed) {
         this.buffalo = buffalo;
-        this.chargeSpeed = chargeSpeed;
+        this.chargeSpeed = chargeSpeed * 0.7; // reduce speed
         this.setControls(EnumSet.of(Control.MOVE, Control.LOOK));
     }
 
     @Override
     public boolean canStart() {
         target = buffalo.getTarget();
-        return target != null && target.isAlive() && buffalo.isOnGround();
+        return target != null && target.isAlive() && buffalo.isOnGround() && postChargeCooldown <= 0;
     }
 
     @Override
     public void start() {
-        chargeCooldown = 15; // Wind-up before charging (.75 sec)
+        chargeCooldown = CHARGE_WINDUP;
+        attackCooldown = 0;
         isCharging = false;
     }
 
     @Override
     public void stop() {
         isCharging = false;
+        postChargeCooldown = POST_CHARGE_COOLDOWN;
     }
 
     @Override
     public boolean shouldContinue() {
-        return target != null && target.isAlive();
+        return target != null && target.isAlive() && postChargeCooldown <= 0;
     }
 
     @Override
     public void tick() {
         if (buffalo.getWorld() == null || buffalo.getWorld().isClient) return;
         if (target == null || !target.isAlive()) return;
+
+        if (postChargeCooldown > 0) {
+            postChargeCooldown--;
+            buffalo.setVelocity(Vec3d.ZERO);
+            buffalo.velocityModified = true;
+            return;
+        }
 
         if (target.isInCreativeMode() || target.isSpectator()) {
             buffalo.setTarget(null);
@@ -61,15 +78,20 @@ public class BuffaloChargeAttackGoal extends Goal {
 
         double distanceSq = buffalo.squaredDistanceTo(target);
 
-        if (distanceSq < 25.0) {
+        // Approach slowly if close, but not in attack range
+        if (distanceSq < MIN_CHARGE_DIST * MIN_CHARGE_DIST) {
             Vec3d approachDir = target.getPos().subtract(buffalo.getPos()).normalize();
-            buffalo.setVelocity(approachDir.multiply(0.8));
+            buffalo.setVelocity(approachDir.multiply(0.4)); // slower approach
             buffalo.velocityModified = true;
 
-            if (distanceSq < 2.5) {
-                buffalo.tryAttack((ServerWorld) buffalo.getWorld(), target);
-                stop();
+            if (distanceSq < CLOSE_ATTACK_RANGE) {
+                if (attackCooldown <= 0) {
+                    buffalo.tryAttack((ServerWorld) buffalo.getWorld(), target);
+                    attackCooldown = ATTACK_COOLDOWN;
+                    stop();
+                }
             }
+            if (attackCooldown > 0) attackCooldown--;
             return;
         }
 
@@ -80,10 +102,8 @@ public class BuffaloChargeAttackGoal extends Goal {
             return;
         }
 
-        if (!isCharging && distanceSq >= 25.0) {
+        if (!isCharging && distanceSq >= MIN_CHARGE_DIST * MIN_CHARGE_DIST) {
             isCharging = true;
-
-            // TODO: add charge sound
             buffalo.getWorld().playSound(
                 null, buffalo.getBlockPos(),
                 SoundEvents.ENTITY_COW_HURT, // placeholder
@@ -92,7 +112,7 @@ public class BuffaloChargeAttackGoal extends Goal {
             );
         }
 
-        if (isCharging && distanceSq >= 25.0) {
+        if (isCharging && distanceSq >= MIN_CHARGE_DIST * MIN_CHARGE_DIST) {
             Vec3d dir = target.getPos().subtract(buffalo.getPos()).normalize();
             buffalo.setVelocity(dir.multiply(chargeSpeed));
             buffalo.velocityModified = true;
@@ -102,8 +122,11 @@ public class BuffaloChargeAttackGoal extends Goal {
             buffalo.setHeadYaw(buffalo.getYaw());
 
             if (distanceSq < 3.0 || buffalo.horizontalCollision) {
-                buffalo.tryAttack(((ServerWorld) buffalo.getWorld()), target);
-                stop();
+                if (attackCooldown <= 0) {
+                    buffalo.tryAttack(((ServerWorld) buffalo.getWorld()), target);
+                    attackCooldown = ATTACK_COOLDOWN;
+                    stop();
+                }
             }
         }
     }

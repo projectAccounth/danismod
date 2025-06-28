@@ -1,4 +1,4 @@
-package org.danismod.danismod.client.guiscreens;
+package org.danismod.danismod.client.gui_screens;
 
 import net.minecraft.client.gui.screen.ingame.HandledScreens;
 import org.danismod.danismod.screenhandlers.ModScreenHandlers;

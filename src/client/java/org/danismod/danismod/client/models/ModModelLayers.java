@@ -1,18 +1,23 @@
 package org.danismod.danismod.client.models;
 
+import org.danismod.danismod.Danismod;
+import org.danismod.danismod.client.models.entities.BuffaloModel;
+import org.danismod.danismod.client.models.entities.ElephantModel;
+import org.danismod.danismod.client.models.entities.LionModel;
+
 import net.fabricmc.fabric.api.client.rendering.v1.EntityModelLayerRegistry;
 import net.minecraft.client.render.entity.model.EntityModelLayer;
 import net.minecraft.util.Identifier;
 
 public class ModModelLayers {
     public static final EntityModelLayer ELEPHANT_MODEL_LAYER =
-            new EntityModelLayer(Identifier.of("danismod", "elephant"), "main");
+            new EntityModelLayer(Identifier.of(Danismod.MOD_ID, "elephant"), "main");
     public static final EntityModelLayer NORMAL_LION_MODEL_LAYER =
-            new EntityModelLayer(Identifier.of("danismod", "lion"), "standing");
+            new EntityModelLayer(Identifier.of(Danismod.MOD_ID, "lion"), "standing");
     public static final EntityModelLayer RESTING_LION_MODEL_LAYER =
-            new EntityModelLayer(Identifier.of("danismod", "lion"), "laying");
+            new EntityModelLayer(Identifier.of(Danismod.MOD_ID, "lion"), "laying");
     public static final EntityModelLayer BUFFALO_MODEL_LAYER =
-            new EntityModelLayer(Identifier.of("danismod", "buffalo"), "main");
+            new EntityModelLayer(Identifier.of(Danismod.MOD_ID, "buffalo"), "main");
 
     public static void initialize() {
         EntityModelLayerRegistry.registerModelLayer(ModModelLayers.ELEPHANT_MODEL_LAYER, ElephantModel::getTexturedModelData);

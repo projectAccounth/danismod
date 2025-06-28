@@ -1,4 +1,4 @@
-package org.danismod.others;
+package org.danismod.danismod.others;
 
 import java.util.HashMap;
 import java.util.Map;

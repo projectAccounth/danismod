@@ -20,8 +20,8 @@ import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.World;
 import org.danismod.danismod.items.ModItems;
+import org.danismod.danismod.others.GrinderFuelRegistry;
 import org.danismod.danismod.screenhandlers.GrinderScreenHandler;
-import org.danismod.others.GrinderFuelRegistry;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 

@@ -1,4 +1,4 @@
-package org.danismod.danismod.entity;
+package org.danismod.danismod.entity.mobs;
 
 import net.minecraft.entity.*;
 import net.minecraft.entity.ai.goal.*;
@@ -18,7 +18,7 @@ import net.minecraft.world.World;
 import net.minecraft.entity.player.PlayerEntity;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-
+import org.danismod.danismod.entity.ModEntities;
 import org.danismod.danismod.entity.mob_routines.FollowAdultGoal;
 
 import java.util.List;

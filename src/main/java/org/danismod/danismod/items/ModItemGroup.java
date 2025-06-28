@@ -1,5 +1,7 @@
 package org.danismod.danismod.items;
 
+import org.danismod.danismod.Danismod;
+
 import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemStack;
 import net.minecraft.registry.Registries;
@@ -26,6 +28,6 @@ public class ModItemGroup {
             .build();
 
     public static void initialize() {
-        Registry.register(Registries.ITEM_GROUP, Identifier.of("danismod", "mod_group"), TEST_GROUP);
+        Registry.register(Registries.ITEM_GROUP, Identifier.of(Danismod.MOD_ID, "mod_group"), TEST_GROUP);
     }
 }

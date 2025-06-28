@@ -1,4 +1,4 @@
-package org.danismod.danismod.client.mobsrenderer;
+package org.danismod.danismod.client.mobs_renderer;
 
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -9,16 +9,18 @@ import net.minecraft.client.render.entity.model.EntityModel;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.entity.EntityPose;
 import net.minecraft.util.Identifier;
-import org.danismod.danismod.client.mobsrenderer.renderstates.LionRenderState;
-import org.danismod.danismod.client.models.LionModel;
+
+import org.danismod.danismod.Danismod;
+import org.danismod.danismod.client.mobs_renderer.render_states.LionRenderState;
 import org.danismod.danismod.client.models.ModModelLayers;
-import org.danismod.danismod.entity.Lion;
+import org.danismod.danismod.client.models.entities.LionModel;
+import org.danismod.danismod.entity.mobs.Lion;
 import org.jetbrains.annotations.NotNull;
 
 @Environment(EnvType.CLIENT)
 public class LionRenderer extends MobEntityRenderer<Lion, LionRenderState, EntityModel<LionRenderState>> {
-    private static final Identifier TEXTURE = Identifier.of("danismod", "textures/entities/lion_norm.png");
-    private static final Identifier S_TEXTURE = Identifier.of("danismod", "textures/entities/lion_sleeping.png");
+    private static final Identifier TEXTURE = Identifier.of(Danismod.MOD_ID, "textures/entities/lion_norm.png");
+    private static final Identifier S_TEXTURE = Identifier.of(Danismod.MOD_ID, "textures/entities/lion_sleeping.png");
 
     private static LionModel STANDING_MODEL;
     private static LionModel RESTING_MODEL;

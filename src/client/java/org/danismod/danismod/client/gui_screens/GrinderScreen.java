@@ -1,4 +1,4 @@
-package org.danismod.danismod.client.guiscreens;
+package org.danismod.danismod.client.gui_screens;
 
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -9,11 +9,13 @@ import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.MathHelper;
+
+import org.danismod.danismod.Danismod;
 import org.danismod.danismod.screenhandlers.GrinderScreenHandler;
 
 @Environment(EnvType.CLIENT)
 public class GrinderScreen extends HandledScreen<GrinderScreenHandler> {
-    private static final Identifier TEXTURE = Identifier.of("danismod", "textures/gui/grinder.png");
+    private static final Identifier TEXTURE = Identifier.of(Danismod.MOD_ID, "textures/gui/grinder.png");
     private static final Identifier PROGRESS_TEXTURE = Identifier.ofVanilla("container/furnace/burn_progress");
     private static final Identifier FUEL_TEXTURE = Identifier.ofVanilla("container/brewing_stand/fuel_length");
 

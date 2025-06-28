@@ -1,10 +1,13 @@
-package org.danismod.danismod.client.models;
+package org.danismod.danismod.client.models.entities;
 
 import net.minecraft.client.model.*;
 import net.minecraft.client.render.entity.model.EntityModel;
 import net.minecraft.util.math.MathHelper;
-import org.danismod.danismod.client.mobsrenderer.renderstates.BuffaloRenderState;
 
+import org.danismod.danismod.client.mobs_renderer.render_states.BuffaloRenderState;
+import org.danismod.danismod.client.models.ModModelMethods;
+
+@SuppressWarnings("unused")
 public class BuffaloModel extends EntityModel<BuffaloRenderState> {
 	private final ModelPart root;
 	private final ModelPart legs;
@@ -95,7 +98,7 @@ public class BuffaloModel extends EntityModel<BuffaloRenderState> {
 		float limbSwing = state.limbSwingAnimationProgress;
 		float limbAmplitude = state.limbSwingAmplitude;
 
-		ModModelMethods.animateLegs(limbSwing, limbAmplitude, front_right, front_left, back_right, back_left);
+		ModModelMethods.animateLimbs(limbSwing, limbAmplitude, front_right, front_left, back_right, back_left);
 
 		// Adjust tail movement naturally
 		ModModelMethods.animateTail(limbSwing, limbAmplitude, this.tail, 0.8F, 0.3F);

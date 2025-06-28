@@ -1,14 +1,17 @@
-package org.danismod.danismod.client.models;
+package org.danismod.danismod.client.models.entities;
 
 import net.minecraft.client.model.*;
 import net.minecraft.client.render.entity.model.EntityModel;
 import net.minecraft.entity.EntityPose;
 import net.minecraft.util.math.MathHelper;
-import org.danismod.danismod.client.mobsrenderer.renderstates.LionRenderState;
+
+import org.danismod.danismod.client.mobs_renderer.render_states.LionRenderState;
+import org.danismod.danismod.client.models.ModModelMethods;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Random;
 
+@SuppressWarnings("unused")
 public class LionModel extends EntityModel<LionRenderState> {
     private final ModelPart leg1bone;
 	private final ModelPart leg2bone;
@@ -129,7 +132,7 @@ public class LionModel extends EntityModel<LionRenderState> {
 		float limbSwing = state.limbSwingAnimationProgress;
 		float limbAmplitude = state.limbSwingAmplitude;
 
-		ModModelMethods.animateLegs(limbSwing, limbAmplitude, leg2bone, leg1bone, leg4bone, leg3bone);
+		ModModelMethods.animateLimbs(limbSwing, limbAmplitude, leg2bone, leg1bone, leg4bone, leg3bone);
 
 		// Adjust tail movement naturally
 		ModModelMethods.animateTail(limbSwing, limbAmplitude, this.tailbone, 0.8F, 0.3F);

@@ -1,15 +1,18 @@
-package org.danismod.danismod.client.models;
+package org.danismod.danismod.client.models.entities;
 
 import net.minecraft.client.model.*;
 import net.minecraft.client.render.VertexConsumer;
 import net.minecraft.client.render.entity.model.EntityModel;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.util.math.MathHelper;
-import org.danismod.danismod.client.mobsrenderer.renderstates.ElephantRenderState;
+
+import org.danismod.danismod.client.mobs_renderer.render_states.ElephantRenderState;
+import org.danismod.danismod.client.models.ModModelMethods;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Random;
 
+@SuppressWarnings("unused")
 public class ElephantModel extends EntityModel<ElephantRenderState> {
     private final ModelPart root;
     private final ModelPart head;
@@ -101,7 +104,7 @@ public class ElephantModel extends EntityModel<ElephantRenderState> {
         float limbSwing = state.limbSwingAnimationProgress;
         float limbAmplitude = state.limbSwingAmplitude;
 
-        ModModelMethods.animateLegs(limbSwing, limbAmplitude, frontright, frontleft, backright, backleft);
+        ModModelMethods.animateLimbs(limbSwing, limbAmplitude, frontright, frontleft, backright, backleft);
         // Adjust tail movement naturally
         ModModelMethods.animateTail(limbSwing, limbAmplitude, this.tail, -0.8F, -0.3F);
     }

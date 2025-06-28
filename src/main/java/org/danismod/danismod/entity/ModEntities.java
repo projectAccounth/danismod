@@ -1,5 +1,10 @@
 package org.danismod.danismod.entity;
 
+import org.danismod.danismod.Danismod;
+import org.danismod.danismod.entity.mobs.Buffalo;
+import org.danismod.danismod.entity.mobs.Elephant;
+import org.danismod.danismod.entity.mobs.Lion;
+
 import net.fabricmc.fabric.api.object.builder.v1.entity.FabricDefaultAttributeRegistry;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.SpawnGroup;
@@ -11,17 +16,17 @@ import net.minecraft.util.Identifier;
 public class ModEntities {
     public static final RegistryKey<EntityType<?>> ELEPHANT_KEY = RegistryKey.of(
             Registries.ENTITY_TYPE.getKey(),
-            Identifier.of("danismod", "elephant")
+            Identifier.of(Danismod.MOD_ID, "elephant")
     );
 
     public static final RegistryKey<EntityType<?>> LION_KEY = RegistryKey.of(
             Registries.ENTITY_TYPE.getKey(),
-            Identifier.of("danismod", "lion")
+            Identifier.of(Danismod.MOD_ID, "lion")
     );
 
     public static final RegistryKey<EntityType<?>> BUFFALO_KEY = RegistryKey.of(
             Registries.ENTITY_TYPE.getKey(),
-            Identifier.of("danismod", "buffalo")
+            Identifier.of(Danismod.MOD_ID, "buffalo")
     );
 
     public static final EntityType<Elephant> ELEPHANT = EntityType.Builder.create(Elephant::new, SpawnGroup.CREATURE)
