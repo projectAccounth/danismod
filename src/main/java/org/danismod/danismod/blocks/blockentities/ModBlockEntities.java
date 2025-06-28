@@ -7,10 +7,7 @@ import net.minecraft.registry.Registry;
 import net.minecraft.util.Identifier;
 import org.danismod.danismod.Danismod;
 import org.danismod.danismod.blocks.ModBlocks;
-
-
 public class ModBlockEntities {
-
     public static final BlockEntityType<IvoryGrinderBlockEntity> IVORY_GRINDER_BLOCK_ENTITY_TYPE = Registry.register(
             Registries.BLOCK_ENTITY_TYPE,
             Identifier.of(Danismod.MOD_ID, "ivory_grinder"),

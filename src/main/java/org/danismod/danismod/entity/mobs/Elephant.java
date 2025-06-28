@@ -1,4 +1,4 @@
-package org.danismod.danismod.entity;
+package org.danismod.danismod.entity.mobs;
 
 import net.minecraft.entity.*;
 import net.minecraft.entity.ai.goal.*;
@@ -18,7 +18,7 @@ import net.minecraft.world.World;
 import net.minecraft.entity.player.PlayerEntity;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-
+import org.danismod.danismod.entity.ModEntities;
 import org.danismod.danismod.entity.mob_routines.FollowAdultGoal;
 
 import java.util.List;
@@ -35,12 +35,12 @@ public class Elephant extends AnimalEntity {
         // this.goalSelector.add(1, new EscapeDangerGoal(this, 1.4)); // Run away from danger
         this.goalSelector.add(1, new FollowAdultGoal(this, 1.25)); // Follow adult elephants
         this.goalSelector.add(1, new AnimalMateGoal(this, 1.25)); // Breeding behavior
-        this.goalSelector.add(2, new WanderAroundFarGoal(this, 1.0)); // Roam around
-        this.goalSelector.add(2, new LookAroundGoal(this)); // Look around idly
+        this.goalSelector.add(1, new WanderAroundFarGoal(this, 1.0)); // Roam around
+        this.goalSelector.add(3, new LookAroundGoal(this)); // Look around idly
         this.goalSelector.add(3, new LookAtEntityGoal(this, PlayerEntity.class, 6.0f)); // Look at players
 
         // Attack only when provoked
-        this.goalSelector.add(3, new MeleeAttackGoal(this, 1.4, false));
+        this.goalSelector.add(1, new MeleeAttackGoal(this, 1.4, false));
         this.goalSelector.add(3, new RevengeGoal(this)); // Attacks back when attacked
     }
 

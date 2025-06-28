@@ -20,7 +20,7 @@ public class ModBlocks {
         Registry.register(Registries.BLOCK, Identifier.of(Danismod.MOD_ID, name), block);
     }
     private static Block register(String path, Function<AbstractBlock.Settings, Block> factory, AbstractBlock.Settings settings) {
-        final Identifier identifier = Identifier.of("danismod", path);
+        final Identifier identifier = Identifier.of(Danismod.MOD_ID, path);
         final RegistryKey<Block> registryKey = RegistryKey.of(RegistryKeys.BLOCK, identifier);
 
         final Block block = Blocks.register(registryKey, factory, settings);

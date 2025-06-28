@@ -1,19 +1,24 @@
-package org.danismod.danismod.client.models;
+package org.danismod.danismod.client.models.entities;
 
 import net.minecraft.client.model.*;
 import net.minecraft.client.render.entity.model.EntityModel;
 import net.minecraft.util.math.MathHelper;
-import org.danismod.danismod.client.mobsrenderer.renderstates.ElephantRenderState;
+
+import org.danismod.danismod.client.mob_renderers.render_states.ElephantRenderState;
+import org.danismod.danismod.client.models.ModModelMethods;
 import org.jetbrains.annotations.NotNull;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 
-
+@Environment(EnvType.CLIENT)
+@SuppressWarnings("unused")
 public class ElephantModel extends EntityModel<ElephantRenderState> {
     private final ModelPart root;
     private final ModelPart head;
-    private final ModelPart frontleft;
-    private final ModelPart backright;
-    private final ModelPart frontright;
-    private final ModelPart backleft;
+    private final ModelPart limb_front_left;
+    private final ModelPart limb_back_right;
+    private final ModelPart limb_front_right;
+    private final ModelPart limb_back_left;
     private final ModelPart tail;
     public ElephantModel(ModelPart root) {
         super(root);
@@ -28,10 +33,10 @@ public class ElephantModel extends EntityModel<ElephantRenderState> {
         ModelPart tuskLeft = tusks.getChild("tuskLeft");
         ModelPart tuskRight = tusks.getChild("tuskRight");
         ModelPart legs = this.root.getChild("legs");
-        this.frontleft = legs.getChild("frontleft");
-        this.backright = legs.getChild("backright");
-        this.frontright = legs.getChild("frontright");
-        this.backleft = legs.getChild("backleft");
+        this.limb_front_left = legs.getChild("limb_front_left");
+        this.limb_back_right = legs.getChild("limb_back_right");
+        this.limb_front_right = legs.getChild("limb_front_right");
+        this.limb_back_left = legs.getChild("limb_back_left");
         this.tail = this.root.getChild("tail");
     }
     public static TexturedModelData getTexturedModelData() {
@@ -72,13 +77,13 @@ public class ElephantModel extends EntityModel<ElephantRenderState> {
 
         ModelPartData legs = root.addChild("legs", ModelPartBuilder.create(), ModelTransform.pivot(1.0875F, 6.0384F, -2.8417F));
 
-        ModelPartData frontleft = legs.addChild("frontleft", ModelPartBuilder.create().uv(14, 0).cuboid(-3.8725F, 0.766F, -3.8583F, 7.425F, 19.9233F, 7.7166F, new Dilation(0.0F)), ModelTransform.pivot(-6.3F, 0.0F, 14.0F));
+        ModelPartData limb_front_left = legs.addChild("limb_front_left", ModelPartBuilder.create().uv(14, 0).cuboid(-3.8725F, 0.766F, -3.8583F, 7.425F, 19.9233F, 7.7166F, new Dilation(0.0F)), ModelTransform.pivot(-6.3F, 0.0F, 14.0F));
 
-        ModelPartData backright = legs.addChild("backright", ModelPartBuilder.create().uv(14, 0).cuboid(-3.8725F, 0.766F, -3.8583F, 7.425F, 19.9233F, 7.7166F, new Dilation(0.0F)), ModelTransform.pivot(7.0F, 0.0F, -13.0F));
+        ModelPartData limb_back_right = legs.addChild("limb_back_right", ModelPartBuilder.create().uv(14, 0).cuboid(-3.8725F, 0.766F, -3.8583F, 7.425F, 19.9233F, 7.7166F, new Dilation(0.0F)), ModelTransform.pivot(7.0F, 0.0F, -13.0F));
 
-        ModelPartData frontright = legs.addChild("frontright", ModelPartBuilder.create().uv(14, 0).cuboid(8.4275F, 0.766F, -3.8583F, 7.425F, 19.9233F, 7.7166F, new Dilation(0.0F)), ModelTransform.pivot(-6.3F, 0.0F, 14.0F));
+        ModelPartData limb_front_right = legs.addChild("limb_front_right", ModelPartBuilder.create().uv(14, 0).cuboid(8.4275F, 0.766F, -3.8583F, 7.425F, 19.9233F, 7.7166F, new Dilation(0.0F)), ModelTransform.pivot(-6.3F, 0.0F, 14.0F));
 
-        ModelPartData backleft = legs.addChild("backleft", ModelPartBuilder.create().uv(14, 0).cuboid(-5.1725F, 2.766F, -3.8583F, 7.425F, 19.9233F, 7.7166F, new Dilation(0.0F)), ModelTransform.pivot(-5.0F, -2.0F, -13.0F));
+        ModelPartData limb_back_left = legs.addChild("limb_back_left", ModelPartBuilder.create().uv(14, 0).cuboid(-5.1725F, 2.766F, -3.8583F, 7.425F, 19.9233F, 7.7166F, new Dilation(0.0F)), ModelTransform.pivot(-5.0F, -2.0F, -13.0F));
 
         ModelPartData tail = root.addChild("tail", ModelPartBuilder.create().uv(118, 65).cuboid(-1.1334F, -1.127F, -13.5477F, 2.2334F, 2.3049F, 3.7681F, new Dilation(0.0F))
                 .uv(102, 44).cuboid(-0.6138F, -0.6779F, -9.7477F, 1.3138F, 1.3558F, 9.8953F, new Dilation(0.0F)), ModelTransform.pivot(0.8F, -6.5779F, -20.5524F));
@@ -87,30 +92,16 @@ public class ElephantModel extends EntityModel<ElephantRenderState> {
 
     @Override
     public void setAngles(@NotNull ElephantRenderState state) {
-        float maxHeadYaw = 45F * ((float) Math.PI / 180F); // Max head rotation in radians
+        float maxHeadYaw = 45F * ((float) Math.PI / 180F);
         float headPitchTarget = MathHelper.clamp(state.pitch, -20F, 20F) * ((float) Math.PI / 180F);
 
-        // Smooth interpolation for natural movement
         this.head.yaw = MathHelper.clamp(state.bodyYaw - maxHeadYaw, -maxHeadYaw, maxHeadYaw) * 0.2F;
         this.head.pitch = (headPitchTarget - this.head.pitch) * 0.2F;
 
-        // Keep existing limb animation
         float limbSwing = state.limbFrequency;
         float limbAmplitude = state.limbAmplitudeMultiplier;
 
-        if (limbSwing < 0.01F) {
-            this.frontright.pitch = 0.0F;
-            this.frontleft.pitch = 0.0F;
-            this.backright.pitch = 0.0F;
-            this.backleft.pitch = 0.0F;
-        } else {
-            this.frontright.pitch = MathHelper.cos(limbSwing * 0.6662F + (float) Math.PI) * 1.4F * limbAmplitude;
-            this.frontleft.pitch = MathHelper.cos(limbSwing * 0.6662F) * 1.4F * limbAmplitude;
-            this.backright.pitch = MathHelper.cos(limbSwing * 0.6662F) * 1.4F * limbAmplitude;
-            this.backleft.pitch = MathHelper.cos(limbSwing * 0.6662F + (float) Math.PI) * 1.4F * limbAmplitude;
-        }
-
-        // Adjust tail movement naturally
+        ModModelMethods.animateLimbs(limbSwing, limbAmplitude, this.limb_front_left, this.limb_front_right, this.limb_back_left, this.limb_back_right);
         ModModelMethods.animateTail(limbSwing, limbAmplitude, this.tail, -0.8F, -0.3F);
     }
 }

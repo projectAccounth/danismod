@@ -1,47 +1,40 @@
 package org.danismod.danismod.entity;
 
+import org.danismod.danismod.Danismod;
+import org.danismod.danismod.entity.mobs.Buffalo;
+import org.danismod.danismod.entity.mobs.Elephant;
+import org.danismod.danismod.entity.mobs.Lion;
+
 import net.fabricmc.fabric.api.object.builder.v1.entity.FabricDefaultAttributeRegistry;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.SpawnGroup;
 import net.minecraft.registry.Registries;
 import net.minecraft.registry.Registry;
 import net.minecraft.registry.RegistryKey;
+import net.minecraft.registry.RegistryKeys;
 import net.minecraft.util.Identifier;
 
 public class ModEntities {
-    public static final RegistryKey<EntityType<?>> ELEPHANT_KEY = RegistryKey.of(
-            Registries.ENTITY_TYPE.getKey(),
-            Identifier.of("danismod", "elephant")
-    );
+    private static <T extends Entity> EntityType<T> registerEntity(
+        String name,
+        EntityType.EntityFactory<T> factory,
+        float width, float height,
+        SpawnGroup group
+    ) {
+        RegistryKey<EntityType<?>> key = RegistryKey.of(RegistryKeys.ENTITY_TYPE, Identifier.of(Danismod.MOD_ID, name));
+        EntityType<T> type = EntityType.Builder.create(factory, group).dimensions(width, height).build(key);
+        Registry.register(Registries.ENTITY_TYPE, key, type);
+        return type;
+    }
 
-    public static final RegistryKey<EntityType<?>> LION_KEY = RegistryKey.of(
-            Registries.ENTITY_TYPE.getKey(),
-            Identifier.of("danismod", "lion")
-    );
-
-    public static final RegistryKey<EntityType<?>> BUFFALO_KEY = RegistryKey.of(
-            Registries.ENTITY_TYPE.getKey(),
-            Identifier.of("danismod", "buffalo")
-    );
-
-    public static final EntityType<Elephant> ELEPHANT = EntityType.Builder.create(Elephant::new, SpawnGroup.CREATURE)
-            .dimensions(1.8f, 2.5f)
-            .build(ELEPHANT_KEY);
-
-    public static final EntityType<Lion> LION = EntityType.Builder.create(Lion::new, SpawnGroup.CREATURE)
-            .dimensions(1.2f, 1.5f)
-            .build(LION_KEY);
-
-    public static final EntityType<Buffalo> BUFFALO = EntityType.Builder.create(Buffalo::new, SpawnGroup.CREATURE)
-            .dimensions(1.8F, 2.5F)
-            .build(BUFFALO_KEY);
+    public static final EntityType<Elephant> ELEPHANT = registerEntity("elephant", Elephant::new, 1.8f, 2.5f, SpawnGroup.CREATURE);
+    public static final EntityType<Lion> LION = registerEntity("lion", Lion::new, 1f, 1.2f, SpawnGroup.CREATURE);
+    public static final EntityType<Buffalo> BUFFALO = registerEntity("buffalo", Buffalo::new, 1.8f, 2.5f, SpawnGroup.CREATURE);
 
     public static void register() {
-        Registry.register(Registries.ENTITY_TYPE, ELEPHANT_KEY, ELEPHANT);
         FabricDefaultAttributeRegistry.register(ELEPHANT, Elephant.createMobAttributes());
-        Registry.register(Registries.ENTITY_TYPE, LION_KEY, LION);
         FabricDefaultAttributeRegistry.register(LION, Lion.createMobAttributes());
-        Registry.register(Registries.ENTITY_TYPE, BUFFALO_KEY, BUFFALO);
         FabricDefaultAttributeRegistry.register(BUFFALO, Buffalo.createMobAttributes());
     }
 }

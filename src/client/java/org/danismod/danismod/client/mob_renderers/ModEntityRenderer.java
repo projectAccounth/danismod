@@ -1,4 +1,4 @@
-package org.danismod.danismod.client.mobsrenderer;
+package org.danismod.danismod.client.mob_renderers;
 
 import org.danismod.danismod.entity.ModEntities;
 

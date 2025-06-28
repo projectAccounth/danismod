@@ -1,4 +1,4 @@
-package org.danismod.danismod.client.mobsrenderer;
+package org.danismod.danismod.client.mob_renderers;
 
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -9,16 +9,18 @@ import net.minecraft.client.render.entity.model.EntityModel;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.entity.EntityPose;
 import net.minecraft.util.Identifier;
-import org.danismod.danismod.client.mobsrenderer.renderstates.LionRenderState;
-import org.danismod.danismod.client.models.LionModel;
+
+import org.danismod.danismod.Danismod;
+import org.danismod.danismod.client.mob_renderers.render_states.LionRenderState;
 import org.danismod.danismod.client.models.ModModelLayers;
-import org.danismod.danismod.entity.Lion;
+import org.danismod.danismod.client.models.entities.LionModel;
+import org.danismod.danismod.entity.mobs.Lion;
 import org.jetbrains.annotations.NotNull;
 
 @Environment(EnvType.CLIENT)
 public class LionRenderer extends MobEntityRenderer<Lion, LionRenderState, EntityModel<LionRenderState>> {
-    private static final Identifier TEXTURE = Identifier.of("danismod", "textures/entities/lion_norm.png");
-    private static final Identifier S_TEXTURE = Identifier.of("danismod", "textures/entities/lion_sleeping.png");
+    private static final Identifier TEXTURE = Identifier.of(Danismod.MOD_ID, "textures/entities/lion_norm.png");
+    private static final Identifier S_TEXTURE = Identifier.of(Danismod.MOD_ID, "textures/entities/lion_sleeping.png");
 
     private static LionModel STANDING_MODEL;
     private static LionModel RESTING_MODEL;
@@ -26,7 +28,7 @@ public class LionRenderer extends MobEntityRenderer<Lion, LionRenderState, Entit
     @Override
     public void updateRenderState(Lion lion, LionRenderState state, float tickDelta) {
         super.updateRenderState(lion, state, tickDelta);
-        state.setMaleFlag(lion.isMale());
+        state.isMale = lion.isMale();
     }
 
     public LionRenderer(EntityRendererFactory.Context context) {
@@ -54,8 +56,8 @@ public class LionRenderer extends MobEntityRenderer<Lion, LionRenderState, Entit
         }
 
         this.model.getPart("manebone").ifPresent(
-            (part) -> part.visible = (state.isMale() || (!state.baby))
-        );
+            (part) -> part.visible = (state.isMale && (!state.baby))
+        ); // hardcoded unfortunately
 
         float scale = state.baby ? 0.5F : 1.0F;
         matrices.scale(scale, scale, scale);

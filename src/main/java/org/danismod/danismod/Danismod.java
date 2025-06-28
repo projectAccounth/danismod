@@ -1,9 +1,14 @@
 package org.danismod.danismod;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.danismod.danismod.blocks.ModBlocks;
 import org.danismod.danismod.blocks.blockentities.ModBlockEntities;
 import org.danismod.danismod.entity.ModEntities;
 import org.danismod.danismod.entity.ModEntitySpawns;
+import org.danismod.danismod.features.ModConfiguredFeatures;
+import org.danismod.danismod.features.trees.ModFoliagePlacers;
+import org.danismod.danismod.features.trees.ModTrunkPlacerTypes;
 import org.danismod.danismod.items.ModItemGroup;
 import org.danismod.danismod.items.ModItems;
 import net.fabricmc.api.ModInitializer;
@@ -12,6 +17,7 @@ import org.danismod.others.GrinderFuelRegistry;
 
 public class Danismod implements ModInitializer {
     public static final String MOD_ID = "danismod";
+    public static final Logger LOGGER = LogManager.getLogger("Danismod");
 
     @Override
     public void onInitialize() {
@@ -23,5 +29,8 @@ public class Danismod implements ModInitializer {
         ModSoundEvents.registerModSounds();
         ModBlockEntities.register();
         GrinderFuelRegistry.initialize();
+        ModTrunkPlacerTypes.initialize();
+        ModConfiguredFeatures.initialize();
+        ModFoliagePlacers.initialize();
     }
 }

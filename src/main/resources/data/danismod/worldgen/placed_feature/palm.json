@@ -1,0 +1,17 @@
+{
+    "feature": "danismod:palm",
+    "placement": [
+      {
+        "type": "minecraft:block_predicate_filter",
+        "predicate": {
+          "type": "minecraft:would_survive",
+          "state": {
+            "Name": "minecraft:torch",
+            "Properties": {
+              "stage": "0"
+            }
+          }
+        }
+      }
+    ]
+  }

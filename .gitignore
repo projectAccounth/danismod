@@ -3,5 +3,8 @@ gradle/
 .gradle/
 build/
 run/
-.vscode/launch.json
+.vscode/
 bin/
+
+# workspace exceptions
+!.vscode/settings.json
